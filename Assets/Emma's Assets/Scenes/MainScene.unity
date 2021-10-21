@@ -153,7 +153,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629407705}
   m_LocalRotation: {x: -0, y: -0.7146738, z: -0, w: 0.69945794}
-  m_LocalPosition: {x: -0.0000014951236, y: 23.29, z: 12.3}
+  m_LocalPosition: {x: 6.37, y: 26.52, z: 12.44}
   m_LocalScale: {x: 0.5503834, y: 0.1019881, z: 1.6207614}
   m_Children:
   - {fileID: 909812079196191348}
@@ -162,7 +162,6 @@ Transform:
   - {fileID: 909812081126675438}
   - {fileID: 1742434428}
   - {fileID: 7389430278491169996}
-  - {fileID: 675061623}
   - {fileID: 1924257307}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -184,9 +183,9 @@ MonoBehaviour:
   _addForces: {fileID: 629407712}
   _turnDampening: 1.5
   _headset: {fileID: 2133559426}
-  _headsetZThresh: 0.3
+  _headsetZThresh: 0.1
   _headsetZEndThresh: 1
-  _headsetXThresh: 0.3
+  _headsetXThresh: 0.1
   _headsetXEndThresh: 1
   headsetZDistance: 0
   headsetXDistance: 0
@@ -281,7 +280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f3ca7ae42aca44cb73f795f8e201b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardCenterOfMass: {fileID: 675061623}
   moveForce: 0
   moveDampening: 3
   turnTorque: 0
@@ -741,36 +739,6 @@ MonoBehaviour:
       m_SingletonActionBindings: []
     m_Reference: {fileID: 875253871413052681, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   m_ButtonPressPoint: 0.5
---- !u!1 &675061622
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 675061623}
-  m_Layer: 0
-  m_Name: CenterOfMass
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &675061623
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 675061622}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.71, z: -0.076}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 629407706}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!850595691 &769168082
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -1652,7 +1620,7 @@ Transform:
   m_Children:
   - {fileID: 2039074164}
   m_Father: {fileID: 629407706}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1980624511
 GameObject:

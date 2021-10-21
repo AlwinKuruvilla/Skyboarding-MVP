@@ -68,8 +68,8 @@ public class SkyboardController : MonoBehaviour
 
     private void InitializePositions()
     {
-        _addForces.moveForce = 25f;
         _headsetIniPos = Vector3.zero - _headset.localPosition;
+        _addForces.moveForce = 25f;
     }
     
     // Update is called once per frame
@@ -79,7 +79,7 @@ public class SkyboardController : MonoBehaviour
         headsetZDistance = (_headsetIniPos.z - (0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
         // this controls roll
-        headsetXDistance = (0f - _headset.localPosition.x); // The center position of x will always be at 0
+        headsetXDistance = (0 - _headset.localPosition.x); 
         
         // this can be used to increase or decrease drag
         // CURRENTLY NO BEING USED
@@ -125,8 +125,6 @@ public class SkyboardController : MonoBehaviour
             _addForces.turnTorque -= Time.deltaTime;
             //add dampening
             _addForces.turnTorque += _addForces.turnTorque * Time.deltaTime * _turnDampening;
-            //clamp so the value doesn't go too high
-            _addForces.turnTorque = Mathf.Clamp(_addForces.turnTorque, -10, 0);
         }
 
         if (_rightTurn)
@@ -135,8 +133,6 @@ public class SkyboardController : MonoBehaviour
             _addForces.turnTorque += Time.deltaTime;
             //add dampening
             _addForces.turnTorque -= _addForces.turnTorque * Time.deltaTime * -_turnDampening;
-            //clamp so the value doesn't go too high
-            _addForces.turnTorque = Mathf.Clamp(_addForces.turnTorque, 0, 10);
         }
 
         //eventually change this to be paired individually

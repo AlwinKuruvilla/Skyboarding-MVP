@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 public class AddForces : MonoBehaviour
 {
-    public Transform boardCenterOfMass;
     public float moveForce;
     public float moveDampening = 2f;
     public float turnTorque;
@@ -24,9 +23,6 @@ public class AddForces : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //set center of mass
-        rb.centerOfMass = boardCenterOfMass.position;
-        
         //changing velocity directly instead of using addforce allows us to keep the rigidbody drag numbers higher
         //copied from here: https://forum.unity.com/threads/rigidbody-floating-in-airstream.118052/
         Vector3 velocity = rb.velocity;
