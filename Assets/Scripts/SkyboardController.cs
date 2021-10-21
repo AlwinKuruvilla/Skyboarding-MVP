@@ -37,6 +37,7 @@ public class SkyboardController : MonoBehaviour
     public float percentage;
 
     private Vector3 rot;
+    private bool _brakes;
     
     // Start is called before the first frame update
     void Start()
@@ -88,6 +89,9 @@ public class SkyboardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //CHANGE THESE INTO ROTATIONS
+        //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
+        
         // this controls pitch
         headsetZDistance = (_headsetIniPos.z - (0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
@@ -169,7 +173,7 @@ public class SkyboardController : MonoBehaviour
         
         if (YAmt < -6) //we are flying down! boost speed
         {
-            targetSpeed = targetSpeed + (1 * (YAmt * -0.5f));
+            targetSpeed = targetSpeed + (2 * (YAmt * -0.5f));
         }
         else if (YAmt > 7) //we are flying up! reduce speed
         {
@@ -183,4 +187,17 @@ public class SkyboardController : MonoBehaviour
         speed = Mathf.Lerp(speed, targetSpeed, 4f * Time.deltaTime);
     }
 
+    private void LateUpdate()
+    {
+        if (_brakes)
+        {
+            float targetSpeed = 0f;
+            speed = Mathf.Lerp(speed, targetSpeed, 4f * Time.deltaTime);
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        _brakes = true;
+    }
 }
