@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,7 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private float _turnDampening = 2f;
     [SerializeField] private Transform _headset;
     
+    // Make sure XRRig is zeroed out
     // lerp between these two values based on percent
     // first float determines size of "deadzone"
     [SerializeField] private float _headsetZThresh = 0.1f;
@@ -27,10 +29,20 @@ public class SkyboardController : MonoBehaviour
 
     private bool _leftTurn = false;
     private bool _rightTurn = false;
+
+    public Rigidbody rb;
+    public float speed = 12.5f;
+    public float drag = 0f;
+    public float percentage;
+
+    private Vector3 rot;
     
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
+        rot = transform.eulerAngles;
+
         //keep thrust off until positions are initialized
         _addForces.moveForce = 0f;
         
@@ -69,12 +81,28 @@ public class SkyboardController : MonoBehaviour
     private void InitializePositions()
     {
         _headsetIniPos = Vector3.zero - _headset.localPosition;
-        _addForces.moveForce = 25f;
+        _addForces.moveForce = 0f;
     }
     
     // Update is called once per frame
     void Update()
     {
+        // thrust
+        // 45 is max degrees
+        percentage = (rot.x - 45) / 45;
+        // adjust drag: Fast (4), SLow (6)
+        // -2 is the diff, 6 is the minimum drag
+        float mod_drag = (percentage * -2) + 6;
+        // adjust speed: Fast(13.8), Slow(12.5)
+        float mod_speed = percentage * (13.8f - 12.5f) + 12.5f;
+
+        rb.drag = mod_drag;
+        
+        Vector3 localV = transform.InverseTransformDirection(rb.velocity);
+        localV.z = mod_speed;
+        rb.velocity = transform.TransformDirection(localV);
+        
+        
         // this controls pitch
         headsetZDistance = (_headsetIniPos.z - (0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
