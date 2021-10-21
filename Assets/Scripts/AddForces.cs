@@ -6,28 +6,41 @@ using UnityEngine.InputSystem;
 
 public class AddForces : MonoBehaviour
 {
+    public Transform boardCenterOfMass;
     public float moveForce;
+    public float moveDampening = 2f;
     public float turnTorque;
     public float pitchTorque;
     public float rollTorque;
-    private Rigidbody hb;
+    private Rigidbody rb;
     private void Start()
     {
         //get hoverboard rb from current gameobject
-        hb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+
+        //booster
+        rb.AddForce(2f*transform.forward, ForceMode.Impulse);
     }
 
     private void FixedUpdate()
     {
-        hb.AddForce(moveForce * transform.forward);
+        //set center of mass
+        rb.centerOfMass = boardCenterOfMass.position;
         
+        //changing velocity directly instead of using addforce allows us to keep the rigidbody drag numbers higher
+        //copied from here: https://forum.unity.com/threads/rigidbody-floating-in-airstream.118052/
+        Vector3 velocity = rb.velocity;
+        velocity += transform.forward * moveForce * Time.deltaTime; // dir = fan direction, ie. transform.up or whatever setup you have there
+        velocity -= velocity * moveDampening * Time.deltaTime; // add dampening so that velocity doesn't get out of hand
+        rb.velocity = velocity;
+
         //change Yaw
-        hb.AddTorque(turnTorque * transform.up);
+        rb.AddTorque(turnTorque * transform.up, ForceMode.Impulse);
         
         //change Pitch
-        hb.AddTorque(pitchTorque * transform.right);
+        rb.AddTorque(pitchTorque * transform.right, ForceMode.Impulse);
         
         //change Roll
-        hb.AddTorque(rollTorque * transform.forward);
+        rb.AddTorque(rollTorque * transform.forward, ForceMode.Impulse);
     }
 }
