@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
@@ -87,22 +88,6 @@ public class SkyboardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // thrust
-        // 45 is max degrees
-        percentage = (rot.x - 45) / 45;
-        // adjust drag: Fast (4), SLow (6)
-        // -2 is the diff, 6 is the minimum drag
-        float mod_drag = (percentage * -2) + 6;
-        // adjust speed: Fast(13.8), Slow(12.5)
-        float mod_speed = percentage * (13.8f - 12.5f) + 12.5f;
-
-        rb.drag = mod_drag;
-        
-        Vector3 localV = transform.InverseTransformDirection(rb.velocity);
-        localV.z = mod_speed;
-        rb.velocity = transform.TransformDirection(localV);
-        
-        
         // this controls pitch
         headsetZDistance = (_headsetIniPos.z - (0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
@@ -170,4 +155,32 @@ public class SkyboardController : MonoBehaviour
         }
         
     }
+
+    private void FixedUpdate()
+    {
+        //copied from https://assetstore.unity.com/packages/tools/physics/third-person-flying-controller-181621
+        //handle how our speed is increased or decreased when flying
+        Vector3 localV = transform.InverseTransformDirection(rb.velocity);
+        localV.z = speed;
+        rb.velocity = transform.TransformDirection(localV);
+
+        float YAmt = rb.velocity.y;
+        float targetSpeed = speed;
+        
+        if (YAmt < -6) //we are flying down! boost speed
+        {
+            targetSpeed = targetSpeed + (1 * (YAmt * -0.5f));
+        }
+        else if (YAmt > 7) //we are flying up! reduce speed
+        {
+            targetSpeed = targetSpeed - (0.5f * YAmt);
+            speed -= (0.5f * YAmt) * Time.deltaTime;
+        }
+        
+        //clamp speed
+        targetSpeed = Mathf.Clamp(speed, -50, 50);
+        //lerp speed
+        speed = Mathf.Lerp(speed, targetSpeed, 4f * Time.deltaTime);
+    }
+
 }
