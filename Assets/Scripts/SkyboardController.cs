@@ -304,7 +304,7 @@ public class SkyboardController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground")) return;
         
-        float SpeedLimitBeforeCrash = 5f;
+        float SpeedLimitBeforeCrash = 2f;
         
         if (speed > SpeedLimitBeforeCrash)
         {
