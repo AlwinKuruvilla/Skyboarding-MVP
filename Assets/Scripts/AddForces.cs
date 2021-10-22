@@ -27,6 +27,6 @@ public class AddForces : MonoBehaviour
         rb.AddTorque(pitchTorque * transform.right, ForceMode.Force);
         
         //change Roll
-        rb.AddTorque(rollTorque * transform.forward, ForceMode.Force);
+        rb.AddTorque(rollTorque * transform.forward);
     }
 }

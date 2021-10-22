@@ -585,6 +585,14 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Joystick Press",
+                    "type": "Button",
+                    "id": "0068be3b-38de-4b2a-9e25-8043110d6524",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -895,6 +903,17 @@
                     "action": "Translate Anchor",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "b28e8a8a-a2ee-43f9-b2c6-94896dde8a6d",
+                    "path": "<XRController>{RightHand}/thumbstickClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "Joystick Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
