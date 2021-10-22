@@ -113,7 +113,7 @@ public class SkyboardController : MonoBehaviour
         
         // this controls pitch
         // CURRENTLY NO BEING USED
-        headsetZDistance = ( _headset.localPosition.z); // take the initial position as the center and calculate offset
+        headsetZDistance = ( - _headset.localPosition.z); // take the initial position as the center and calculate offset
         
         // this controls roll
         headsetXDistance = (0 - _headset.localPosition.x); 
@@ -136,6 +136,23 @@ public class SkyboardController : MonoBehaviour
         else
         {
             _addForces.rollTorque = 0f;
+        }
+        
+        //Change Pitch
+        if (headsetZDistance < -_headsetZThresh)
+        {
+            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
+            // changes the percentage value of the position of the headset within the range to match a number between a and b
+            _addForces.pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
+        }
+        else if (headsetZDistance > _headsetZThresh)
+        {
+            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
+            _addForces.pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
+        }
+        else
+        {
+            _addForces.pitchTorque = 0f; //if in deadzone just set to nothing
         }
 
         //control turning or yaw
