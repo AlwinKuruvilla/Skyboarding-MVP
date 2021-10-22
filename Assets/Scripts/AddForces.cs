@@ -16,27 +16,17 @@ public class AddForces : MonoBehaviour
     {
         //get hoverboard rb from current gameobject
         rb = GetComponent<Rigidbody>();
-
-        //booster
-        rb.AddForce(2f*transform.forward, ForceMode.Impulse);
     }
 
     private void FixedUpdate()
     {
-        //changing velocity directly instead of using addforce allows us to keep the rigidbody drag numbers higher
-        //copied from here: https://forum.unity.com/threads/rigidbody-floating-in-airstream.118052/
-        Vector3 velocity = rb.velocity;
-        velocity += transform.forward * moveForce * Time.deltaTime; // dir = fan direction, ie. transform.up or whatever setup you have there
-        velocity -= velocity * moveDampening * Time.deltaTime; // add dampening so that velocity doesn't get out of hand
-        rb.velocity = velocity;
-
         //change Yaw
-        rb.AddTorque(turnTorque * transform.up, ForceMode.Impulse);
+        rb.AddTorque(turnTorque * transform.up, ForceMode.Acceleration);
         
         //change Pitch
-        rb.AddTorque(pitchTorque * transform.right, ForceMode.Impulse);
+        rb.AddTorque(pitchTorque * transform.right, ForceMode.Force);
         
         //change Roll
-        rb.AddTorque(rollTorque * transform.forward, ForceMode.Impulse);
+        rb.AddTorque(rollTorque * transform.forward, ForceMode.Force);
     }
 }

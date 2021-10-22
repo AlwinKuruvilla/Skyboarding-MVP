@@ -146,14 +146,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 394464931}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.81, y: 32.87, z: 12.44}
+  m_LocalRotation: {x: 0, y: 0.9748586, z: -0, w: -0.22282459}
+  m_LocalPosition: {x: 5.8, y: 45.35, z: -9.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 629407706}
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 205.75, z: 0}
 --- !u!1 &629407705
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,8 +183,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629407705}
-  m_LocalRotation: {x: -0, y: -0.7146738, z: -0, w: 0.69945794}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.916668, z: -0, w: 0.39964956}
+  m_LocalPosition: {x: -12.7, y: -8.93, z: -14.5}
   m_LocalScale: {x: 0.5503834, y: 0.1019881, z: 1.6207614}
   m_Children:
   - {fileID: 909812079196191348}
@@ -195,7 +195,7 @@ Transform:
   - {fileID: 1924257307}
   m_Father: {fileID: 394464932}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -91.233, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 132.887, z: 0}
 --- !u!114 &629407707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,6 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 232eea13972e7da4bb6add46037b09fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _speedUpInput: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _leftTurnButton: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _rightTurnButton: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _addForces: {fileID: 629407712}
@@ -221,9 +222,18 @@ MonoBehaviour:
   headsetXDistance: 0
   headsetYDistance: 0
   rb: {fileID: 0}
-  speed: 12.5
+  speed: 0
   drag: 0
   percentage: 0
+  FlyingSpeed: 20
+  FlyingAdjustmentSpeed: 2
+  FlyingAcceleration: 4
+  FlyingMinSpeed: 1
+  FlyingDecelleration: 0.1
+  FlyingGravityAmt: 1
+  GlideGravityAmt: 2
+  FlyingGravBuildSpeed: 0.2
+  StunnedTime: 0.25
 --- !u!54 &629407708
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -232,9 +242,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629407705}
   serializedVersion: 2
-  m_Mass: 100
-  m_Drag: 2
-  m_AngularDrag: 2
+  m_Mass: 5
+  m_Drag: 0
+  m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -309,13 +319,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629407705}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6f3ca7ae42aca44cb73f795f8e201b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveForce: 0
-  moveDampening: 3
+  moveDampening: 10
   turnTorque: 0
   pitchTorque: 0
   rollTorque: 0
@@ -1296,7 +1306,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2538
+  m_Name: pb_Mesh21830
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
