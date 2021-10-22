@@ -37,7 +37,10 @@ public class SkyboardController : MonoBehaviour
     public float percentage;
 
     private Vector3 rot;
+    
+    //change these to enum
     private bool _brakes;
+    private bool _stunned;
     
     // Start is called before the first frame update
     void Start()
@@ -150,6 +153,8 @@ public class SkyboardController : MonoBehaviour
             _addForces.turnTorque += Time.deltaTime;
             //add dampening
             _addForces.turnTorque -= _addForces.turnTorque * Time.deltaTime * -_turnDampening;
+
+            _brakes = true;
         }
 
         //eventually change this to be paired individually
@@ -185,6 +190,34 @@ public class SkyboardController : MonoBehaviour
         targetSpeed = Mathf.Clamp(speed, -50, 50);
         //lerp speed
         speed = Mathf.Lerp(speed, targetSpeed, 4f * Time.deltaTime);
+
+        if (_stunned)
+        {
+            //lerp mesh slower when not on ground
+            Vector3 DownwardDirection = Vector3.up;
+            RotateSelf(DownwardDirection, Time.deltaTime, 8f);
+
+            float turnSpeed = 2f;
+            RotateMesh(Time.deltaTime, transform.forward, turnSpeed);
+
+            //push backwards while we fall
+            Vector3 FallDir = -transform.forward * 4f;
+            FallDir.y = rb.velocity.y;
+            rb.velocity = Vector3.Lerp(rb.velocity, FallDir, Time.deltaTime * 2f);
+        }
+    }
+    
+    //rotate our upwards direction
+    void RotateSelf(Vector3 Direction, float d, float GravitySpd)
+    {
+        Vector3 LerpDir = Vector3.Lerp(transform.up, Direction, d * GravitySpd);
+        transform.rotation = Quaternion.FromToRotation(transform.up, LerpDir) * transform.rotation;
+    }
+    //rotate our left right direction
+    void RotateMesh(float d, Vector3 LookDir, float spd)
+    {
+        Quaternion SlerpRot = Quaternion.LookRotation(LookDir, transform.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, SlerpRot, spd * d);
     }
 
     private void LateUpdate()
@@ -192,12 +225,27 @@ public class SkyboardController : MonoBehaviour
         if (_brakes)
         {
             float targetSpeed = 0f;
-            speed = Mathf.Lerp(speed, targetSpeed, 4f * Time.deltaTime);
+            speed = Mathf.Lerp(speed, targetSpeed,  2f * Time.deltaTime);
         }
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        _brakes = true;
+        //StunTimer = StunnedTime;
+
+        //set physics
+        speed = 0f;
+        rb.velocity = Vector3.zero;
+
+        Vector3 PushDirection = -transform.forward;
+        float StunPushBack = 2f;
+        rb.AddForce(PushDirection * StunPushBack, ForceMode.Impulse);
+
+        _stunned = true;
+
+        //turn on gravity
+        rb.useGravity = true;
+        
+        
     }
 }
