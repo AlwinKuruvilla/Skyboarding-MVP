@@ -260,6 +260,7 @@ public class SkyboardController : MonoBehaviour
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
             rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
         
         if (_stunned)
