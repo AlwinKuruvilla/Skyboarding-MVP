@@ -112,8 +112,7 @@ public class SkyboardController : MonoBehaviour
         //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
         
         // this controls pitch
-        // CURRENTLY NO BEING USED
-        headsetZDistance = ( - _headset.localPosition.z); // take the initial position as the center and calculate offset
+        headsetZDistance = (_headset.localPosition.z); // take the initial position as the center and calculate offset
         
         // this controls roll
         headsetXDistance = (0 - _headset.localPosition.x); 
@@ -303,7 +302,10 @@ public class SkyboardController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        if (other.gameObject.CompareTag("Ground")) return;
+        
         float SpeedLimitBeforeCrash = 5f;
+        
         if (speed > SpeedLimitBeforeCrash)
         {
             StunTimer = StunnedTime;
