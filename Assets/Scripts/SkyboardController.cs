@@ -40,6 +40,9 @@ public class SkyboardController : MonoBehaviour
 
     private Vector3 rot;
     
+    //collision detection
+    private bool _collided = false;
+    
     //change these to enum
     private bool _brakes;
     private bool _stunned;
@@ -79,10 +82,6 @@ public class SkyboardController : MonoBehaviour
         _speedUp = true;
 
         _brakes = false;
-        
-        ActGravAmt = 0f; //our gravity is returned to the flying amount
-        //turn on gravity
-        rb.useGravity = false;
     }
 
     private void OnRightTurnCancel(InputAction.CallbackContext obj)
@@ -108,75 +107,6 @@ public class SkyboardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //CHANGE THESE INTO ROTATIONS
-        //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
-        
-        // this controls pitch
-        headsetZDistance = (_headset.localPosition.z); // take the initial position as the center and calculate offset
-        
-        // this controls roll
-        headsetXDistance = (0 - _headset.localPosition.x); 
-        
-        // this can be used to increase or decrease drag
-        // CURRENTLY NO BEING USED
-        headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
-
-        //Change Roll
-        if (headsetXDistance < -_headsetXThresh)
-        {
-            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            _addForces.rollTorque = Mathf.Lerp(0, -1, -lerpPct);
-        }
-        else if (headsetXDistance > _headsetXThresh)
-        {
-            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            _addForces.rollTorque = Mathf.Lerp(0, 1, lerpPct);
-        }
-        else
-        {
-            _addForces.rollTorque = 0f;
-        }
-        
-        //Change Pitch
-        if (headsetZDistance < -_headsetZThresh)
-        {
-            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            // changes the percentage value of the position of the headset within the range to match a number between a and b
-            _addForces.pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
-        }
-        else if (headsetZDistance > _headsetZThresh)
-        {
-            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            _addForces.pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
-        }
-        else
-        {
-            _addForces.pitchTorque = 0f; //if in deadzone just set to nothing
-        }
-
-        //control turning or yaw
-        if (_leftTurn)
-        {
-            //change Yaw toward the left incremently
-            _addForces.turnTorque -= Time.deltaTime;
-            //add dampening
-            _addForces.turnTorque += _addForces.turnTorque * Time.deltaTime * _turnDampening;
-        }
-
-        if (_rightTurn)
-        {
-            //change Yaw toward the right incremently
-            _addForces.turnTorque += Time.deltaTime;
-            //add dampening
-            _addForces.turnTorque -= _addForces.turnTorque * Time.deltaTime * -_turnDampening;
-        }
-
-        //eventually change this to be paired individually
-        if (!_leftTurn && !_rightTurn)
-        {
-            _addForces.turnTorque = 0;
-        }
-        
     }
 
     public float FlyingSpeed = 20f;
@@ -252,6 +182,75 @@ public class SkyboardController : MonoBehaviour
         
         targetVelocity -= Vector3.up * ActGravAmt;
         
+        //CHANGE THESE INTO ROTATIONS
+        //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
+        
+        // this controls pitch
+        headsetZDistance = (_headset.localPosition.z); // take the initial position as the center and calculate offset
+        
+        // this controls roll
+        headsetXDistance = (0 - _headset.localPosition.x); 
+        
+        // this can be used to increase or decrease drag
+        // CURRENTLY NO BEING USED
+        headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
+
+        //Change Roll
+        if (headsetXDistance < -_headsetXThresh)
+        {
+            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
+            _addForces.rollTorque = Mathf.Lerp(0, -1, -lerpPct);
+        }
+        else if (headsetXDistance > _headsetXThresh)
+        {
+            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
+            _addForces.rollTorque = Mathf.Lerp(0, 1, lerpPct);
+        }
+        else
+        {
+            _addForces.rollTorque = 0f;
+        }
+        
+        //Change Pitch
+        if (headsetZDistance < -_headsetZThresh)
+        {
+            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
+            // changes the percentage value of the position of the headset within the range to match a number between a and b
+            _addForces.pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
+        }
+        else if (headsetZDistance > _headsetZThresh)
+        {
+            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
+            _addForces.pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
+        }
+        else
+        {
+            _addForces.pitchTorque = 0f; //if in deadzone just set to nothing
+        }
+
+        //control turning or yaw
+        if (_leftTurn)
+        {
+            //change Yaw toward the left incremently
+            _addForces.turnTorque = -Time.deltaTime;
+            //add dampening
+            _addForces.turnTorque += _addForces.turnTorque * Time.deltaTime * _turnDampening;
+        }
+
+        if (_rightTurn)
+        {
+            //change Yaw toward the right incremently
+            _addForces.turnTorque = Time.deltaTime;
+            //add dampening
+            _addForces.turnTorque -= _addForces.turnTorque * Time.deltaTime * -_turnDampening;
+        }
+
+        //eventually change this to be paired individually
+        if (!_leftTurn && !_rightTurn)
+        {
+            _addForces.turnTorque = 0;
+        }
+        
         //lerp velocity
         Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
         rb.velocity = dir;
@@ -303,9 +302,13 @@ public class SkyboardController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        if (_collided) return; //if still in contact with collider don't execute code
+        _collided = true;
+        
         if (other.gameObject.CompareTag("Ground")) return;
         
-        float SpeedLimitBeforeCrash = 2f;
+        
+        float SpeedLimitBeforeCrash = 5f;
         
         if (speed > SpeedLimitBeforeCrash)
         {
@@ -324,5 +327,14 @@ public class SkyboardController : MonoBehaviour
             //turn on gravity
             rb.useGravity = true;
         }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (_collided) _collided = false;
+        
+        ActGravAmt = 0f; //our gravity is returned to the flying amount
+        //turn on gravity
+        rb.useGravity = false;
     }
 }

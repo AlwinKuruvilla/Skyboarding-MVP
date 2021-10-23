@@ -12,6 +12,7 @@ public class AddForces : MonoBehaviour
     public float pitchTorque;
     public float rollTorque;
     
+    [SerializeField] private float _turnForce = 50f;
     [SerializeField] private float _pitchForce = 50f;
     [SerializeField] private float _rollForce = 50f;
     
@@ -25,12 +26,12 @@ public class AddForces : MonoBehaviour
     private void FixedUpdate()
     {
         //change Yaw
-        rb.AddTorque(turnTorque * transform.up, ForceMode.Acceleration);
+        rb.AddRelativeTorque(turnTorque * Vector3.up * _turnForce, ForceMode.VelocityChange);
         
         //change Pitch
-        rb.AddTorque(pitchTorque * transform.right * _pitchForce, ForceMode.Force);
+        rb.AddRelativeTorque(pitchTorque * Vector3.right * _pitchForce, ForceMode.Force);
         
         //change Roll
-        rb.AddTorque(rollTorque * transform.forward * _rollForce, ForceMode.Force);
+        rb.AddRelativeTorque(rollTorque * Vector3.forward * _rollForce, ForceMode.Force);
     }
 }
