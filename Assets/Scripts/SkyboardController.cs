@@ -30,8 +30,8 @@ public class SkyboardController : MonoBehaviour
     
     private Vector3 _headsetIniPos;
 
-    private bool _leftTurn = false;
-    private bool _rightTurn = false;
+    [SerializeField] private bool _leftTurn = false;
+    [SerializeField] private bool _rightTurn = false;
 
     public Rigidbody rb;
     public float speed = 12.5f;
@@ -41,7 +41,7 @@ public class SkyboardController : MonoBehaviour
     private Vector3 rot;
     
     //collision detection
-    private bool _collided = false;
+    [SerializeField] private bool _collided = false;
     
     //change these to enum
     private bool _brakes;
@@ -152,7 +152,6 @@ public class SkyboardController : MonoBehaviour
             FlyAccel = FlyAccel * 0.8f;
         
         //handle how our speed is increased or decreased when flying
-        YAmt = rb.velocity.y;
         float targetSpeed = Spd;
         
         if (YAmt < -6) //we are flying down! boost speed
@@ -173,14 +172,6 @@ public class SkyboardController : MonoBehaviour
         //apply speed
         float FlyLerpSpd = FlyingAdjustmentSpeed * FlyingAdjustmentLerp;
         Vector3 targetVelocity = transform.forward * speed;
-        
-        //push down more when not pressing fly
-        if(_speedUp)
-            ActGravAmt = Mathf.Lerp(ActGravAmt, FlyingGravityAmt, FlyingGravBuildSpeed * 4f * Time.deltaTime);
-        else
-            ActGravAmt = Mathf.Lerp(ActGravAmt, GlideGravityAmt, FlyingGravBuildSpeed * 0.5f * Time.deltaTime);
-        
-        targetVelocity -= Vector3.up * ActGravAmt;
         
         //CHANGE THESE INTO ROTATIONS
         //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
@@ -228,29 +219,56 @@ public class SkyboardController : MonoBehaviour
             _addForces.pitchTorque = 0f; //if in deadzone just set to nothing
         }
 
+        float turnAnglePerFixedUpdate = 0.1f;
+        float torqueAmount = 3f;
         //control turning or yaw
         if (_leftTurn)
         {
-            //change Yaw toward the left incremently
-            _addForces.turnTorque = -Time.deltaTime;
-            //add dampening
-            _addForces.turnTorque += _addForces.turnTorque * Time.deltaTime * _turnDampening;
+            var rot = Quaternion.AngleAxis(-15,transform.up);
+            // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
+            Vector3 direction = rot * transform.forward;
+            // Create a quaternion (rotation) 
+            Quaternion q = Quaternion.AngleAxis(turnAnglePerFixedUpdate, rb.transform.up) * rb.rotation;
+
+            //get the angle between transform.forward and target delta
+            float angleDiff = Vector3.Angle(transform.forward, direction);
+		
+            // get its cross product, which is the axis of rotation to
+            // get from one vector to the other
+            Vector3 cross = Vector3.Cross(transform.forward, direction);
+		
+            // apply torque along that axis according to the magnitude of the angle.
+            rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
         }
 
         if (_rightTurn)
         {
-            //change Yaw toward the right incremently
-            _addForces.turnTorque = Time.deltaTime;
-            //add dampening
-            _addForces.turnTorque -= _addForces.turnTorque * Time.deltaTime * -_turnDampening;
-        }
+            var rot = Quaternion.AngleAxis(15,transform.up);
+            // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
+            Vector3 direction = rot * transform.forward;
+            // Create a quaternion (rotation) 
+            Quaternion q = Quaternion.AngleAxis(turnAnglePerFixedUpdate, rb.transform.up) * rb.rotation;
 
-        //eventually change this to be paired individually
-        if (!_leftTurn && !_rightTurn)
-        {
-            _addForces.turnTorque = 0;
+            //get the angle between transform.forward and target delta
+            float angleDiff = Vector3.Angle(transform.forward, direction);
+		
+            // get its cross product, which is the axis of rotation to
+            // get from one vector to the other
+            Vector3 cross = Vector3.Cross(transform.forward, direction);
+		
+            // apply torque along that axis according to the magnitude of the angle.
+            rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
         }
         
+        //RotateToVelocity(Time.deltaTime, 5f * 0.05f);
+        
+        //push down more when not pressing fly
+        if(_speedUp)
+            ActGravAmt = Mathf.Lerp(ActGravAmt, FlyingGravityAmt, FlyingGravBuildSpeed * 4f * Time.deltaTime);
+        else
+            ActGravAmt = Mathf.Lerp(ActGravAmt, GlideGravityAmt, FlyingGravBuildSpeed * 0.5f * Time.deltaTime);
+        
+        targetVelocity -= Vector3.up * ActGravAmt;
         //lerp velocity
         Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
         rb.velocity = dir;
@@ -299,6 +317,12 @@ public class SkyboardController : MonoBehaviour
         Quaternion SlerpRot = Quaternion.LookRotation(LookDir, transform.up);
         transform.rotation = Quaternion.Slerp(transform.rotation, SlerpRot, spd * d);
     }
+    //rotate towards the velocity direction
+    void RotateToVelocity(float d, float spd)
+    {
+        Quaternion SlerpRot = Quaternion.LookRotation(rb.velocity.normalized);
+        transform.rotation = Quaternion.Slerp(transform.rotation, SlerpRot, spd * d);
+    }
 
     private void OnCollisionEnter(Collision other)
     {
@@ -319,7 +343,7 @@ public class SkyboardController : MonoBehaviour
             rb.velocity = Vector3.zero;
 
             Vector3 PushDirection = -transform.forward;
-            float StunPushBack = 2f;
+            float StunPushBack = 10f;
             rb.AddForce(PushDirection * StunPushBack, ForceMode.Impulse);
 
             _stunned = true;
@@ -333,7 +357,7 @@ public class SkyboardController : MonoBehaviour
     {
         if (_collided) _collided = false;
         
-        ActGravAmt = 0f; //our gravity is returned to the flying amount
+        ActGravAmt = FlyingGravityAmt; //our gravity is returned to the flying amount
         //turn on gravity
         rb.useGravity = false;
     }
