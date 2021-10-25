@@ -11,7 +11,6 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private InputActionReference _brakeInput;
     [SerializeField] private InputActionReference _leftTurnButton;
     [SerializeField] private InputActionReference _rightTurnButton;
-    [SerializeField] private AddForces _addForces;
     [SerializeField] private float _turnDampening = 2f;
     [SerializeField] private Transform _headset;
     
@@ -53,6 +52,10 @@ public class SkyboardController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rot = transform.eulerAngles;
+        
+        rb.velocity = Vector3.zero;
+        
+        Invoke(nameof(InitializePositions), 2f);
 
         //listen for button presses
         _brakeInput.action.started += OnBrakePressed;
@@ -64,6 +67,11 @@ public class SkyboardController : MonoBehaviour
         _leftTurnButton.action.canceled += OnLeftTurnCancel;
         _rightTurnButton.action.canceled += OnRightTurnCancel;
         _speedUpInput.action.canceled += OnSpeedUpCancel;
+    }
+
+    private void InitializePositions()
+    {
+        _headsetIniPos = _headset.localPosition;
     }
 
     private void OnBrakePressed(InputAction.CallbackContext obj)
@@ -126,8 +134,48 @@ public class SkyboardController : MonoBehaviour
     public float StunnedTime = 0.25f; //how long we are stunned for
     private float StunTimer; //the in use stun timer
     
+    [Header("Turning")]
+    public float pitchTorque;
+    public float rollTorque;
+    [SerializeField] private float _pitchForce = 50f;
+    [SerializeField] private float _rollForce = 50f;
+    
     private void FixedUpdate()
     {
+        if (_brakes)
+        {
+            FlyingAdjustmentLerp = 0;    //reset flying adjustment
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        
+        if (_stunned)
+        {
+            //reduce stun timer
+            if (StunTimer > 0)
+            {
+                StunTimer -= Time.deltaTime;
+
+                if (StunTimer > StunnedTime * 0.5f)
+                    return;
+            }
+            
+            //lerp mesh slower when not on ground
+            Vector3 DownwardDirection = Vector3.up;
+            RotateSelf(DownwardDirection, Time.deltaTime, 8f);
+
+            float turnSpeed = 2f;
+            RotateMesh(Time.deltaTime, transform.forward, turnSpeed);
+
+            //push backwards while we fall
+            Vector3 FallDir = -transform.forward * 4f;
+            FallDir.y = rb.velocity.y;
+            rb.velocity = Vector3.Lerp(rb.velocity, FallDir, Time.deltaTime * 2f);
+
+            _stunned = false;
+            return;
+        }
+        
         //copied from https://assetstore.unity.com/packages/tools/physics/third-person-flying-controller-181621
         //lerp controls
         if (FlyingAdjustmentLerp < 1.1)
@@ -177,10 +225,10 @@ public class SkyboardController : MonoBehaviour
         //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
         
         // this controls pitch
-        headsetZDistance = (_headset.localPosition.z); // take the initial position as the center and calculate offset
+        headsetZDistance = (-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
         // this controls roll
-        headsetXDistance = (0 - _headset.localPosition.x); 
+        headsetXDistance = (0f -_headset.localPosition.x); 
         
         // this can be used to increase or decrease drag
         // CURRENTLY NO BEING USED
@@ -190,16 +238,16 @@ public class SkyboardController : MonoBehaviour
         if (headsetXDistance < -_headsetXThresh)
         {
             float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            _addForces.rollTorque = Mathf.Lerp(0, -1, -lerpPct);
+            rollTorque = Mathf.Lerp(0, -1, -lerpPct);
         }
         else if (headsetXDistance > _headsetXThresh)
         {
             float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            _addForces.rollTorque = Mathf.Lerp(0, 1, lerpPct);
+            rollTorque = Mathf.Lerp(0, 1, lerpPct);
         }
         else
-        {
-            _addForces.rollTorque = 0f;
+        { 
+            rollTorque = 0f;
         }
         
         //Change Pitch
@@ -207,16 +255,16 @@ public class SkyboardController : MonoBehaviour
         {
             float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
             // changes the percentage value of the position of the headset within the range to match a number between a and b
-            _addForces.pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
+            pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
         }
         else if (headsetZDistance > _headsetZThresh)
         {
             float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            _addForces.pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
+            pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
         }
         else
         {
-            _addForces.pitchTorque = 0f; //if in deadzone just set to nothing
+            pitchTorque = 0f; //if in deadzone just set to nothing
         }
 
         float turnAnglePerFixedUpdate = 0.1f;
@@ -260,7 +308,12 @@ public class SkyboardController : MonoBehaviour
             rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
         }
         
-        //RotateToVelocity(Time.deltaTime, 5f * 0.05f);
+        //change Pitch
+        rb.AddTorque(pitchTorque * rb.transform.right * _pitchForce, ForceMode.Force);
+        
+        //change Roll
+        rb.AddTorque(rollTorque * rb.transform.forward * _rollForce, ForceMode.Force);
+        
         
         //push down more when not pressing fly
         if(_speedUp)
@@ -272,37 +325,6 @@ public class SkyboardController : MonoBehaviour
         //lerp velocity
         Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
         rb.velocity = dir;
-        
-        if (_brakes)
-        {
-            FlyingAdjustmentLerp = 0;    //reset flying adjustment
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-        
-        if (_stunned)
-        {
-            //reduce stun timer
-            if (StunTimer > 0)
-            {
-                StunTimer -= Time.deltaTime;
-
-                if (StunTimer > StunnedTime * 0.5f)
-                    return;
-            }
-            
-            //lerp mesh slower when not on ground
-            Vector3 DownwardDirection = Vector3.up;
-            RotateSelf(DownwardDirection, Time.deltaTime, 8f);
-
-            float turnSpeed = 2f;
-            RotateMesh(Time.deltaTime, transform.forward, turnSpeed);
-
-            //push backwards while we fall
-            Vector3 FallDir = -transform.forward * 4f;
-            FallDir.y = rb.velocity.y;
-            rb.velocity = Vector3.Lerp(rb.velocity, FallDir, Time.deltaTime * 2f);
-        }
     }
     
     //rotate our upwards direction
@@ -342,14 +364,12 @@ public class SkyboardController : MonoBehaviour
             speed = 0f;
             rb.velocity = Vector3.zero;
 
-            Vector3 PushDirection = -transform.forward;
-            float StunPushBack = 10f;
+            //push away in the direction of the normal
+            Vector3 PushDirection = other.contacts[0].normal;
+            float StunPushBack = 5f;
             rb.AddForce(PushDirection * StunPushBack, ForceMode.Impulse);
 
             _stunned = true;
-
-            //turn on gravity
-            rb.useGravity = true;
         }
     }
 
@@ -358,7 +378,5 @@ public class SkyboardController : MonoBehaviour
         if (_collided) _collided = false;
         
         ActGravAmt = FlyingGravityAmt; //our gravity is returned to the flying amount
-        //turn on gravity
-        rb.useGravity = false;
     }
 }
