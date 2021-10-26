@@ -50460,8 +50460,8 @@ MonoBehaviour:
   _turnDampening: 1.5
   _headset: {fileID: 2133559426}
   _headsetZThresh: 0.1
-  _headsetZEndThresh: 0.5
-  _headsetXThresh: 0.5
+  _headsetZEndThresh: 1
+  _headsetXThresh: 0.1
   _headsetXEndThresh: 1
   headsetZDistance: 0
   headsetXDistance: 0
@@ -50478,14 +50478,14 @@ MonoBehaviour:
   FlyingAcceleration: 4
   FlyingMinSpeed: 6
   FlyingDecelleration: 0.1
-  FlyingGravityAmt: 0.1
+  FlyingGravityAmt: 0.2
   GlideGravityAmt: 1
   FlyingGravBuildSpeed: 0.2
   StunnedTime: 0.25
   pitchTorque: 0
   rollTorque: 0
   _pitchForce: 0.1
-  _rollForce: 5
+  _rollForce: 0.25
 --- !u!54 &629407708
 Rigidbody:
   m_ObjectHideFlags: 0

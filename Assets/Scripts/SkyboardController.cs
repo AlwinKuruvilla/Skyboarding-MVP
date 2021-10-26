@@ -150,8 +150,11 @@ public class SkyboardController : MonoBehaviour
         if (_brakes)
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            rb.velocity = rb.velocity * 0.95f;
+            
+            rb.angularVelocity = rb.angularVelocity * 0.95f;
+
+            return;
         }
         
         if (_stunned)
@@ -314,12 +317,16 @@ public class SkyboardController : MonoBehaviour
             rb.angularVelocity = cross * angleDiff  * torqueAmount;
         }
         
+        //CHANGE PITCH AND ROLL BASED ON HEAD ANGLE TO BOTTOM OF XRRIG
+        //and then eventually to pos of feet relative
+        
         //change Pitch
         rb.angularVelocity += (pitchTorque * rb.transform.right * _pitchForce);
 
         angularVelocityForLU = rb.angularVelocity;
 
         //change Roll
+        rb.angularVelocity += (rollTorque * rb.transform.forward * _rollForce);
         //rb.AddTorque(rollTorque * rb.transform.forward * _rollForce, ForceMode.Force);
 
         //push down more when not pressing fly
