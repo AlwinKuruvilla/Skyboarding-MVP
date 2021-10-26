@@ -310,11 +310,10 @@ public class SkyboardController : MonoBehaviour
         
         //change Pitch
         rb.AddTorque(pitchTorque * rb.transform.right * _pitchForce, ForceMode.Force);
-        
+
         //change Roll
-        rb.AddTorque(rollTorque * rb.transform.forward * _rollForce, ForceMode.Force);
-        
-        
+        //rb.AddTorque(rollTorque * rb.transform.forward * _rollForce, ForceMode.Force);
+
         //push down more when not pressing fly
         if(_speedUp)
             ActGravAmt = Mathf.Lerp(ActGravAmt, FlyingGravityAmt, FlyingGravBuildSpeed * 4f * Time.deltaTime);
