@@ -50484,7 +50484,7 @@ MonoBehaviour:
   StunnedTime: 0.25
   pitchTorque: 0
   rollTorque: 0
-  _pitchForce: 25
+  _pitchForce: 0.1
   _rollForce: 5
 --- !u!54 &629407708
 Rigidbody:
@@ -51207,7 +51207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caff514de9b15ad48ab85dcff5508221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UpdateTrackingType: 0
+  m_UpdateTrackingType: 2
   m_EnableInputTracking: 1
   m_EnableInputActions: 1
   m_ModelPrefab: {fileID: 0}
@@ -54418,7 +54418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caff514de9b15ad48ab85dcff5508221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UpdateTrackingType: 0
+  m_UpdateTrackingType: 2
   m_EnableInputTracking: 1
   m_EnableInputActions: 1
   m_ModelPrefab: {fileID: 0}
@@ -108035,7 +108035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TrackingType: 0
-  m_UpdateType: 0
+  m_UpdateType: 2
   m_PositionAction:
     m_Name: Main Camera - TPD - Position
     m_Type: 0

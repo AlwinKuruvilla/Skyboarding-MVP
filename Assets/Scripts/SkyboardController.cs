@@ -50,6 +50,8 @@ public class SkyboardController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.fixedDeltaTime = 1f / 72;
+            
         rb = GetComponent<Rigidbody>();
         rot = transform.eulerAngles;
         
@@ -139,7 +141,10 @@ public class SkyboardController : MonoBehaviour
     public float rollTorque;
     [SerializeField] private float _pitchForce = 50f;
     [SerializeField] private float _rollForce = 50f;
-    
+
+
+    private Vector3 velocityforLU;
+    private Vector3 angularVelocityForLU;
     private void FixedUpdate()
     {
         if (_brakes)
@@ -269,10 +274,11 @@ public class SkyboardController : MonoBehaviour
 
         float turnAnglePerFixedUpdate = 0.1f;
         float torqueAmount = 3f;
+        Quaternion leftQ;
         //control turning or yaw
         if (_leftTurn)
         {
-            var rot = Quaternion.AngleAxis(-15,transform.up);
+            var rot = Quaternion.AngleAxis(-5,transform.up);
             // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
             Vector3 direction = rot * transform.forward;
             // Create a quaternion (rotation) 
@@ -284,14 +290,14 @@ public class SkyboardController : MonoBehaviour
             // get its cross product, which is the axis of rotation to
             // get from one vector to the other
             Vector3 cross = Vector3.Cross(transform.forward, direction);
-		
+            
             // apply torque along that axis according to the magnitude of the angle.
-            rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
+            rb.angularVelocity = (cross * angleDiff  * torqueAmount);
         }
 
         if (_rightTurn)
         {
-            var rot = Quaternion.AngleAxis(15,transform.up);
+            var rot = Quaternion.AngleAxis(5,transform.up);
             // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
             Vector3 direction = rot * transform.forward;
             // Create a quaternion (rotation) 
@@ -305,11 +311,13 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
 		
             // apply torque along that axis according to the magnitude of the angle.
-            rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
+            rb.angularVelocity = cross * angleDiff  * torqueAmount;
         }
         
         //change Pitch
-        rb.AddTorque(pitchTorque * rb.transform.right * _pitchForce, ForceMode.Force);
+        rb.angularVelocity += (pitchTorque * rb.transform.right * _pitchForce);
+
+        angularVelocityForLU = rb.angularVelocity;
 
         //change Roll
         //rb.AddTorque(rollTorque * rb.transform.forward * _rollForce, ForceMode.Force);
@@ -321,11 +329,20 @@ public class SkyboardController : MonoBehaviour
             ActGravAmt = Mathf.Lerp(ActGravAmt, GlideGravityAmt, FlyingGravBuildSpeed * 0.5f * Time.deltaTime);
         
         targetVelocity -= Vector3.up * ActGravAmt;
+      
         //lerp velocity
         Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
         rb.velocity = dir;
+
+        velocityforLU = rb.velocity;
     }
-    
+
+    private void LateUpdate()
+    {
+        //rb.velocity = velocityforLU;
+        //rb.angularVelocity = angularVelocityForLU;
+    }
+
     //rotate our upwards direction
     void RotateSelf(Vector3 Direction, float d, float GravitySpd)
     {
