@@ -53,8 +53,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-<<<<<<< HEAD
-=======
     "com.unity.nuget.mono-cecil": {
       "version": "1.10.2",
       "depth": 0,
@@ -62,7 +60,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
->>>>>>> master
     "com.unity.probuilder": {
       "version": "4.5.2",
       "depth": 0,

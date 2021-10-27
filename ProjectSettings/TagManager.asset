@@ -3,12 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-<<<<<<< HEAD
-  - Win Window
-=======
-  - Ground
->>>>>>> master
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -16,8 +11,8 @@ TagManager:
   - 
   - Water
   - UI
-  - ChasingObject
-  - Player
+  - 
+  - 
   - 
   - 
   - 

@@ -2,11 +2,7 @@ Shader "TextMeshPro/Sprite"
 {
 	Properties
 	{
-<<<<<<< HEAD
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-=======
-		_MainTex ("Sprite Texture", 2D) = "white" {}
->>>>>>> master
 		_Color ("Tint", Color) = (1,1,1,1)
 		
 		_StencilComp ("Stencil Comparison", Float) = 8
@@ -51,45 +47,30 @@ Shader "TextMeshPro/Sprite"
 
 		Pass
 		{
-<<<<<<< HEAD
             Name "Default"
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
             #pragma target 2.0
-=======
-		CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
->>>>>>> master
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
-<<<<<<< HEAD
             #pragma multi_compile __ UNITY_UI_CLIP_RECT
             #pragma multi_compile __ UNITY_UI_ALPHACLIP
-=======
-			#pragma multi_compile __ UNITY_UI_CLIP_RECT
-			#pragma multi_compile __ UNITY_UI_ALPHACLIP
->>>>>>> master
 			
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
 				float4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
-<<<<<<< HEAD
                 UNITY_VERTEX_INPUT_INSTANCE_ID
-=======
->>>>>>> master
 			};
 
 			struct v2f
 			{
 				float4 vertex   : SV_POSITION;
 				fixed4 color    : COLOR;
-<<<<<<< HEAD
                 float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
                 UNITY_VERTEX_OUTPUT_STEREO
@@ -115,43 +96,11 @@ Shader "TextMeshPro/Sprite"
 				return OUT;
 			}
 
-=======
-				half2 texcoord  : TEXCOORD0;
-				float4 worldPosition : TEXCOORD1;
-			};
-			
-			fixed4 _Color;
-			fixed4 _TextureSampleAdd;
-			float4 _ClipRect;
-
-			v2f vert(appdata_t IN)
-			{
-				v2f OUT;
-				OUT.worldPosition = IN.vertex;
-				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
-
-				OUT.texcoord = IN.texcoord;
-				
-				#ifdef UNITY_HALF_TEXEL_OFFSET
-				OUT.vertex.xy += (_ScreenParams.zw-1.0)*float2(-1,1);
-				#endif
-				
-				OUT.color = IN.color * _Color;
-				return OUT;
-			}
-
-			sampler2D _MainTex;
-
->>>>>>> master
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 				
-<<<<<<< HEAD
                 #ifdef UNITY_UI_CLIP_RECT
-=======
-				#if UNITY_UI_CLIP_RECT
->>>>>>> master
 					color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
 				#endif
 

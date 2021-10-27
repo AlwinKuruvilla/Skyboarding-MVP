@@ -467,7 +467,6 @@ MonoBehaviour:
   _brakeInput: {fileID: 5384727332764796693, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _leftTurnButton: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _rightTurnButton: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  _addForces: {fileID: 2549943854175414334}
   _turnDampening: 1.5
   _headset: {fileID: 0}
   _headsetZThresh: 0.1
@@ -477,10 +476,13 @@ MonoBehaviour:
   headsetZDistance: 0
   headsetXDistance: 0
   headsetYDistance: 0
+  _leftTurn: 0
+  _rightTurn: 0
   rb: {fileID: 0}
   speed: 0
   drag: 0
   percentage: 0
+  _collided: 0
   FlyingSpeed: 30
   FlyingAdjustmentSpeed: 5
   FlyingAcceleration: 4
@@ -490,6 +492,10 @@ MonoBehaviour:
   GlideGravityAmt: 1
   FlyingGravBuildSpeed: 0.2
   StunnedTime: 0.25
+  pitchTorque: 0
+  rollTorque: 0
+  _pitchForce: 50
+  _rollForce: 50
 --- !u!1 &3441723357303211057
 GameObject:
   m_ObjectHideFlags: 0
