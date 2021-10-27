@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,11 @@ using System.Numerics;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
+=======
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+>>>>>>> master
 
 public class MovingChaseObject : MonoBehaviour
 {
@@ -14,8 +20,11 @@ public class MovingChaseObject : MonoBehaviour
     public float range = 30f;
     public float slowDownDuration = 3f;
 
+<<<<<<< HEAD
     public int pointValue = 100; // set default point value
 
+=======
+>>>>>>> master
     public GameObject[] players;
     private Rigidbody _objectRgb;
     
@@ -37,7 +46,11 @@ public class MovingChaseObject : MonoBehaviour
         float shortestDistance = Mathf.Infinity; //default value set for shortestDistance
         GameObject nearestPlayer = null;         //default value set for nearest player
         
+<<<<<<< HEAD
         foreach (GameObject player in players)   // runs through the players array to check the distance been each player and the object and update which one is closest to the object
+=======
+        foreach (GameObject player in players) // runs through the players array to check the distance been each player and the object and update which one is closest to the object
+>>>>>>> master
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position); // gets distance between object and player game object
             if (distanceToPlayer < shortestDistance) // checks to see if the distanceToPlayer is less than last recorded shortestDistance
@@ -62,6 +75,7 @@ public class MovingChaseObject : MonoBehaviour
 
 
     }
+<<<<<<< HEAD
 
     public void OnCollisionEnter(Collision other)
     {
@@ -72,6 +86,8 @@ public class MovingChaseObject : MonoBehaviour
     {
         
     }
+=======
+>>>>>>> master
     
     IEnumerator SlowDown(Rigidbody objectToSlow, float duration) //LERP function to slow down an object until it stops
     {
@@ -95,4 +111,8 @@ public class MovingChaseObject : MonoBehaviour
     {
         Gizmos.DrawWireSphere(transform.position, range);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master
