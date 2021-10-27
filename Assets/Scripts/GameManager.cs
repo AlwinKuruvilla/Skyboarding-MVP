@@ -25,17 +25,33 @@ public class GameManager : MonoBehaviour
     public SceneAsset nextLevel;
     public SceneAsset menu;
 
-    private float _minutes;
-    private float _seconds;
-    private int x = 0;
-    
-    
-    
+    public GameObject[] players;
+    public float[] playerHps;
+
+    private float m_Minutes;
+    private float m_Seconds;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        _minutes = Mathf.RoundToInt(levelTimeLimit / 60);     // sets _minutes variable to rounded integer after dividing remaining time by 6o
-        _seconds = Mathf.RoundToInt(levelTimeLimit % 60);     // sets _seconds variable to rounded integer after getting the remainder of the division of remaining time by 60
+        m_Minutes = Mathf.RoundToInt(levelTimeLimit / 60);     // sets _minutes variable to rounded integer after dividing remaining time by 6o
+        m_Seconds = Mathf.RoundToInt(levelTimeLimit % 60);     // sets _seconds variable to rounded integer after getting the remainder of the division of remaining time by 60
+        if (players == null)
+        {
+            int x = 0; // index variable for arrays
+            players = GameObject.FindGameObjectsWithTag("Player");
+            
+            foreach (var player in players)
+            {
+                playerHps[x] = players[x].GetComponent<HealthBar>().healthSlider.value;
+                Debug.Log("Player " + (x+1) + " found. Player " + (x+1) + " HP logged as " + playerHps[x]);
+                x++;
+            }
+
+            x = 0; //resets index variable
+        }
     }
     
 
@@ -45,6 +61,13 @@ public class GameManager : MonoBehaviour
         TimeKeeper();
         if (levelTimeLimit <= 0 && ScoreKeeper.LevelScore <= levelScoreBronze)
             Lose();
+
+        foreach (var playerHp in playerHps)
+        {
+            if (playerHp == 0)
+                Lose();
+        }
+
         if (levelTimeLimit <= 0 && ScoreKeeper.LevelScore >= levelScoreBronze)
         {
             if (ScoreKeeper.LevelScore >= levelScoreBronze && ScoreKeeper.LevelScore < levelScoreSliver)
@@ -64,14 +87,14 @@ public class GameManager : MonoBehaviour
 
     public void TimeKeeper () // keeps time for "Time Remaining" in the UI and for the game
     {
-        if (_seconds <= 0)
+        if (m_Seconds <= 0)
         {
-            _minutes--;
-            _seconds = 59f;
+            m_Minutes--;
+            m_Seconds = 59f;
         }
         
-        _seconds -= Time.deltaTime;   // decreased remaining time by 1 second
-        timeValue.text = _minutes.ToString("00") + ":" + Mathf.RoundToInt(_seconds).ToString("00");  // displays the time in minutes and seconds to the timeValue TextMeshPro referenced in the Inspector
+        m_Seconds -= Time.deltaTime;   // decreased remaining time by 1 second
+        timeValue.text = m_Minutes.ToString("00") + ":" + Mathf.RoundToInt(m_Seconds).ToString("00");  // displays the time in minutes and seconds to the timeValue TextMeshPro referenced in the Inspector
     }
 
     public void Win(int scoreTier)

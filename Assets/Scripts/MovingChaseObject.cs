@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class MovingChaseObject : MonoBehaviour
 {
@@ -9,6 +13,8 @@ public class MovingChaseObject : MonoBehaviour
     public float speed = 50f;
     public float range = 30f;
     public float slowDownDuration = 3f;
+
+    public int pointValue = 100; // set default point value
 
     public GameObject[] players;
     private Rigidbody _objectRgb;
@@ -31,7 +37,7 @@ public class MovingChaseObject : MonoBehaviour
         float shortestDistance = Mathf.Infinity; //default value set for shortestDistance
         GameObject nearestPlayer = null;         //default value set for nearest player
         
-        foreach (GameObject player in players) // runs through the players array to check the distance been each player and the object and update which one is closest to the object
+        foreach (GameObject player in players)   // runs through the players array to check the distance been each player and the object and update which one is closest to the object
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position); // gets distance between object and player game object
             if (distanceToPlayer < shortestDistance) // checks to see if the distanceToPlayer is less than last recorded shortestDistance
@@ -55,6 +61,16 @@ public class MovingChaseObject : MonoBehaviour
         }
 
 
+    }
+
+    public void OnCollisionEnter(Collision other)
+    {
+        _objectRgb.rotation = Quaternion.AngleAxis(45, Vector3.left);
+    }
+
+    public void ObjectType1()
+    {
+        
     }
     
     IEnumerator SlowDown(Rigidbody objectToSlow, float duration) //LERP function to slow down an object until it stops
