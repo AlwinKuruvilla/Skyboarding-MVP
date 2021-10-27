@@ -11,7 +11,6 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private InputActionReference _brakeInput;
     [SerializeField] private InputActionReference _leftTurnButton;
     [SerializeField] private InputActionReference _rightTurnButton;
-    [SerializeField] private AddForces _addForces;
     [SerializeField] private float _turnDampening = 2f;
     [SerializeField] private Transform _headset;
     
@@ -30,8 +29,8 @@ public class SkyboardController : MonoBehaviour
     
     private Vector3 _headsetIniPos;
 
-    private bool _leftTurn = false;
-    private bool _rightTurn = false;
+    [SerializeField] private bool _leftTurn = false;
+    [SerializeField] private bool _rightTurn = false;
 
     public Rigidbody rb;
     public float speed = 12.5f;
@@ -41,7 +40,7 @@ public class SkyboardController : MonoBehaviour
     private Vector3 rot;
     
     //collision detection
-    private bool _collided = false;
+    [SerializeField] private bool _collided = false;
     
     //change these to enum
     private bool _brakes;
@@ -51,8 +50,14 @@ public class SkyboardController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.fixedDeltaTime = 1f / 72;
+            
         rb = GetComponent<Rigidbody>();
         rot = transform.eulerAngles;
+        
+        rb.velocity = Vector3.zero;
+        
+        Invoke(nameof(InitializePositions), 2f);
 
         //listen for button presses
         _brakeInput.action.started += OnBrakePressed;
@@ -66,7 +71,13 @@ public class SkyboardController : MonoBehaviour
         _speedUpInput.action.canceled += OnSpeedUpCancel;
     }
 
+    private void InitializePositions()
+    {
+        _headsetIniPos = _headset.localPosition;
+    }
+
     private void OnBrakePressed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+
     {
         Debug.Log("brakes pressed");
         _brakes = true;
@@ -126,140 +137,25 @@ public class SkyboardController : MonoBehaviour
     public float StunnedTime = 0.25f; //how long we are stunned for
     private float StunTimer; //the in use stun timer
     
+    [Header("Turning")]
+    public float pitchTorque;
+    public float rollTorque;
+    [SerializeField] private float _pitchForce = 50f;
+    [SerializeField] private float _rollForce = 50f;
+
+
+    private Vector3 velocityforLU;
+    private Vector3 angularVelocityForLU;
     private void FixedUpdate()
     {
-        //copied from https://assetstore.unity.com/packages/tools/physics/third-person-flying-controller-181621
-        //lerp controls
-        if (FlyingAdjustmentLerp < 1.1)
-            FlyingAdjustmentLerp += Time.deltaTime * FlyingAdjustmentSpeed;
-
-        //lerp speed
-        float YAmt = rb.velocity.y;
-        float FlyAccel = FlyingAcceleration * FlyingAdjustmentLerp;
-        float Spd = FlyingSpeed;
-        if (!_speedUp)  //we are not holding speedup/fly, slow down
-        {
-            Spd = FlyingMinSpeed; 
-            if(speed > FlyingMinSpeed)
-                FlyAccel = FlyingDecelleration * FlyingAdjustmentLerp;
-        }
-        else
-        {
-            //flying visual effects 
-        }
-        
-        if (speed > FlyingSpeed) //we are over out max speed, slow down slower
-            FlyAccel = FlyAccel * 0.8f;
-        
-        //handle how our speed is increased or decreased when flying
-        YAmt = rb.velocity.y;
-        float targetSpeed = Spd;
-        
-        if (YAmt < -6) //we are flying down! boost speed
-        {
-            targetSpeed = targetSpeed + (2 * (YAmt * -0.5f));
-        }
-        else if (YAmt > 7) //we are flying up! reduce speed
-        {
-            targetSpeed = targetSpeed - (0.5f * YAmt);
-            speed -= (0.5f * YAmt) * Time.deltaTime;
-        }
-        
-        //clamp speed
-        targetSpeed = Mathf.Clamp(targetSpeed, -50, 50);
-        //lerp speed
-        speed = Mathf.Lerp(speed, targetSpeed, FlyAccel * Time.deltaTime);
-        
-        //apply speed
-        float FlyLerpSpd = FlyingAdjustmentSpeed * FlyingAdjustmentLerp;
-        Vector3 targetVelocity = transform.forward * speed;
-        
-        //push down more when not pressing fly
-        if(_speedUp)
-            ActGravAmt = Mathf.Lerp(ActGravAmt, FlyingGravityAmt, FlyingGravBuildSpeed * 4f * Time.deltaTime);
-        else
-            ActGravAmt = Mathf.Lerp(ActGravAmt, GlideGravityAmt, FlyingGravBuildSpeed * 0.5f * Time.deltaTime);
-        
-        targetVelocity -= Vector3.up * ActGravAmt;
-        
-        //CHANGE THESE INTO ROTATIONS
-        //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
-        
-        // this controls pitch
-        headsetZDistance = (_headset.localPosition.z); // take the initial position as the center and calculate offset
-        
-        // this controls roll
-        headsetXDistance = (0 - _headset.localPosition.x); 
-        
-        // this can be used to increase or decrease drag
-        // CURRENTLY NO BEING USED
-        headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
-
-        //Change Roll
-        if (headsetXDistance < -_headsetXThresh)
-        {
-            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            _addForces.rollTorque = Mathf.Lerp(0, -1, -lerpPct);
-        }
-        else if (headsetXDistance > _headsetXThresh)
-        {
-            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            _addForces.rollTorque = Mathf.Lerp(0, 1, lerpPct);
-        }
-        else
-        {
-            _addForces.rollTorque = 0f;
-        }
-        
-        //Change Pitch
-        if (headsetZDistance < -_headsetZThresh)
-        {
-            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            // changes the percentage value of the position of the headset within the range to match a number between a and b
-            _addForces.pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
-        }
-        else if (headsetZDistance > _headsetZThresh)
-        {
-            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            _addForces.pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
-        }
-        else
-        {
-            _addForces.pitchTorque = 0f; //if in deadzone just set to nothing
-        }
-
-        //control turning or yaw
-        if (_leftTurn)
-        {
-            //change Yaw toward the left incremently
-            _addForces.turnTorque = -Time.deltaTime;
-            //add dampening
-            _addForces.turnTorque += _addForces.turnTorque * Time.deltaTime * _turnDampening;
-        }
-
-        if (_rightTurn)
-        {
-            //change Yaw toward the right incremently
-            _addForces.turnTorque = Time.deltaTime;
-            //add dampening
-            _addForces.turnTorque -= _addForces.turnTorque * Time.deltaTime * -_turnDampening;
-        }
-
-        //eventually change this to be paired individually
-        if (!_leftTurn && !_rightTurn)
-        {
-            _addForces.turnTorque = 0;
-        }
-        
-        //lerp velocity
-        Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
-        rb.velocity = dir;
-        
         if (_brakes)
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            rb.velocity = rb.velocity * 0.95f;
+            
+            rb.angularVelocity = rb.angularVelocity * 0.95f;
+
+            return;
         }
         
         if (_stunned)
@@ -284,9 +180,177 @@ public class SkyboardController : MonoBehaviour
             Vector3 FallDir = -transform.forward * 4f;
             FallDir.y = rb.velocity.y;
             rb.velocity = Vector3.Lerp(rb.velocity, FallDir, Time.deltaTime * 2f);
+
+            _stunned = false;
+            return;
         }
+        
+        //copied from https://assetstore.unity.com/packages/tools/physics/third-person-flying-controller-181621
+        //lerp controls
+        if (FlyingAdjustmentLerp < 1.1)
+            FlyingAdjustmentLerp += Time.deltaTime * FlyingAdjustmentSpeed;
+
+        //lerp speed
+        float YAmt = rb.velocity.y;
+        float FlyAccel = FlyingAcceleration * FlyingAdjustmentLerp;
+        float Spd = FlyingSpeed;
+        if (!_speedUp)  //we are not holding speedup/fly, slow down
+        {
+            Spd = FlyingMinSpeed; 
+            if(speed > FlyingMinSpeed)
+                FlyAccel = FlyingDecelleration * FlyingAdjustmentLerp;
+        }
+        else
+        {
+            //flying visual effects 
+        }
+        
+        if (speed > FlyingSpeed) //we are over out max speed, slow down slower
+            FlyAccel = FlyAccel * 0.8f;
+        
+        //handle how our speed is increased or decreased when flying
+        float targetSpeed = Spd;
+        
+        if (YAmt < -6) //we are flying down! boost speed
+        {
+            targetSpeed = targetSpeed + (2 * (YAmt * -0.5f));
+        }
+        else if (YAmt > 7) //we are flying up! reduce speed
+        {
+            targetSpeed = targetSpeed - (0.5f * YAmt);
+            speed -= (0.5f * YAmt) * Time.deltaTime;
+        }
+        
+        //clamp speed
+        targetSpeed = Mathf.Clamp(targetSpeed, -50, 50);
+        //lerp speed
+        speed = Mathf.Lerp(speed, targetSpeed, FlyAccel * Time.deltaTime);
+        
+        //apply speed
+        float FlyLerpSpd = FlyingAdjustmentSpeed * FlyingAdjustmentLerp;
+        Vector3 targetVelocity = transform.forward * speed;
+        
+        //CHANGE THESE INTO ROTATIONS
+        //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
+        
+        // this controls pitch
+        headsetZDistance = (-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
+        
+        // this controls roll
+        headsetXDistance = (0f -_headset.localPosition.x); 
+        
+        // this can be used to increase or decrease drag
+        // CURRENTLY NO BEING USED
+        headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
+
+        //Change Roll
+        if (headsetXDistance < -_headsetXThresh)
+        {
+            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
+            rollTorque = Mathf.Lerp(0, -1, -lerpPct);
+        }
+        else if (headsetXDistance > _headsetXThresh)
+        {
+            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
+            rollTorque = Mathf.Lerp(0, 1, lerpPct);
+        }
+        else
+        { 
+            rollTorque = 0f;
+        }
+        
+        //Change Pitch
+        if (headsetZDistance < -_headsetZThresh)
+        {
+            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
+            // changes the percentage value of the position of the headset within the range to match a number between a and b
+            pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
+        }
+        else if (headsetZDistance > _headsetZThresh)
+        {
+            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
+            pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
+        }
+        else
+        {
+            pitchTorque = 0f; //if in deadzone just set to nothing
+        }
+
+        float turnAnglePerFixedUpdate = 0.1f;
+        float torqueAmount = 3f;
+        Quaternion leftQ;
+        //control turning or yaw
+        if (_leftTurn)
+        {
+            var rot = Quaternion.AngleAxis(-5,transform.up);
+            // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
+            Vector3 direction = rot * transform.forward;
+            // Create a quaternion (rotation) 
+            Quaternion q = Quaternion.AngleAxis(turnAnglePerFixedUpdate, rb.transform.up) * rb.rotation;
+
+            //get the angle between transform.forward and target delta
+            float angleDiff = Vector3.Angle(transform.forward, direction);
+		
+            // get its cross product, which is the axis of rotation to
+            // get from one vector to the other
+            Vector3 cross = Vector3.Cross(transform.forward, direction);
+            
+            // apply torque along that axis according to the magnitude of the angle.
+            rb.angularVelocity = (cross * angleDiff  * torqueAmount);
+        }
+
+        if (_rightTurn)
+        {
+            var rot = Quaternion.AngleAxis(5,transform.up);
+            // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
+            Vector3 direction = rot * transform.forward;
+            // Create a quaternion (rotation) 
+            Quaternion q = Quaternion.AngleAxis(turnAnglePerFixedUpdate, rb.transform.up) * rb.rotation;
+
+            //get the angle between transform.forward and target delta
+            float angleDiff = Vector3.Angle(transform.forward, direction);
+		
+            // get its cross product, which is the axis of rotation to
+            // get from one vector to the other
+            Vector3 cross = Vector3.Cross(transform.forward, direction);
+		
+            // apply torque along that axis according to the magnitude of the angle.
+            rb.angularVelocity = cross * angleDiff  * torqueAmount;
+        }
+        
+        //CHANGE PITCH AND ROLL BASED ON HEAD ANGLE TO BOTTOM OF XRRIG
+        //and then eventually to pos of feet relative
+        
+        //change Pitch
+        rb.angularVelocity += (pitchTorque * rb.transform.right * _pitchForce);
+
+        angularVelocityForLU = rb.angularVelocity;
+
+        //change Roll
+        rb.angularVelocity += (rollTorque * rb.transform.forward * _rollForce);
+        //rb.AddTorque(rollTorque * rb.transform.forward * _rollForce, ForceMode.Force);
+
+        //push down more when not pressing fly
+        if(_speedUp)
+            ActGravAmt = Mathf.Lerp(ActGravAmt, FlyingGravityAmt, FlyingGravBuildSpeed * 4f * Time.deltaTime);
+        else
+            ActGravAmt = Mathf.Lerp(ActGravAmt, GlideGravityAmt, FlyingGravBuildSpeed * 0.5f * Time.deltaTime);
+        
+        targetVelocity -= Vector3.up * ActGravAmt;
+      
+        //lerp velocity
+        Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
+        rb.velocity = dir;
+
+        velocityforLU = rb.velocity;
     }
-    
+
+    private void LateUpdate()
+    {
+        //rb.velocity = velocityforLU;
+        //rb.angularVelocity = angularVelocityForLU;
+    }
+
     //rotate our upwards direction
     void RotateSelf(Vector3 Direction, float d, float GravitySpd)
     {
@@ -297,6 +361,12 @@ public class SkyboardController : MonoBehaviour
     void RotateMesh(float d, Vector3 LookDir, float spd)
     {
         Quaternion SlerpRot = Quaternion.LookRotation(LookDir, transform.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, SlerpRot, spd * d);
+    }
+    //rotate towards the velocity direction
+    void RotateToVelocity(float d, float spd)
+    {
+        Quaternion SlerpRot = Quaternion.LookRotation(rb.velocity.normalized);
         transform.rotation = Quaternion.Slerp(transform.rotation, SlerpRot, spd * d);
     }
 
@@ -318,14 +388,12 @@ public class SkyboardController : MonoBehaviour
             speed = 0f;
             rb.velocity = Vector3.zero;
 
-            Vector3 PushDirection = -transform.forward;
-            float StunPushBack = 2f;
+            //push away in the direction of the normal
+            Vector3 PushDirection = other.contacts[0].normal;
+            float StunPushBack = 5f;
             rb.AddForce(PushDirection * StunPushBack, ForceMode.Impulse);
 
             _stunned = true;
-
-            //turn on gravity
-            rb.useGravity = true;
         }
     }
 
@@ -333,8 +401,6 @@ public class SkyboardController : MonoBehaviour
     {
         if (_collided) _collided = false;
         
-        ActGravAmt = 0f; //our gravity is returned to the flying amount
-        //turn on gravity
-        rb.useGravity = false;
+        ActGravAmt = FlyingGravityAmt; //our gravity is returned to the flying amount
     }
 }

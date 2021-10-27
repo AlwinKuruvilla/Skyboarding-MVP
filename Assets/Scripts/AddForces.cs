@@ -26,7 +26,7 @@ public class AddForces : MonoBehaviour
     private void FixedUpdate()
     {
         //change Yaw
-        rb.AddRelativeTorque(turnTorque * Vector3.up * _turnForce, ForceMode.VelocityChange);
+        //rb.AddRelativeTorque(turnTorque * Vector3.up * _turnForce, ForceMode.VelocityChange);
         
         //change Pitch
         rb.AddRelativeTorque(pitchTorque * Vector3.right * _pitchForce, ForceMode.Force);
