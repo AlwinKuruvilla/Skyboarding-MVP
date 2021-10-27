@@ -13,6 +13,7 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private InputActionReference _rightTurnButton;
     [SerializeField] private float _turnDampening = 2f;
     [SerializeField] private Transform _headset;
+    [SerializeField] private Transform _earPos;
     
     // Make sure XRRig is zeroed out
     // lerp between these two values based on percent
@@ -30,6 +31,7 @@ public class SkyboardController : MonoBehaviour
     public float headsetYDistance;
     
     private Vector3 _headsetIniPos;
+    private Vector3 _feetPos;
 
     [SerializeField] private bool _leftTurn = false;
     [SerializeField] private bool _rightTurn = false;
@@ -76,6 +78,7 @@ public class SkyboardController : MonoBehaviour
     private void InitializePositions()
     {
         _headsetIniPos = _headset.localPosition;
+        _feetPos = new Vector3(0f, 0f, 0f);
     }
 
     private void OnBrakePressed(InputAction.CallbackContext obj)
@@ -149,6 +152,24 @@ public class SkyboardController : MonoBehaviour
     private Vector3 angularVelocityForLU;
     private void FixedUpdate()
     {
+        Vector3 earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
+        
+        Debug.DrawLine(transform.TransformPoint(_feetPos), 
+            transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))), // zero out the x pos
+            Color.blue);
+        
+        float heightDistance = Vector3.Distance(transform.TransformPoint(_feetPos), _earPos.position); // for matching distance (to look nice)
+        
+        Debug.DrawLine(transform.TransformPoint(new Vector3(_feetPos.x, _feetPos.y + heightDistance, _feetPos.z)), 
+            transform.TransformPoint(_feetPos),
+            Color.cyan); // Neutral up direction 0 degrees
+
+        Vector3 upDirection = transform.up;
+        Vector3 pitchTiltDirection = transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))) - transform.TransformPoint(_feetPos);
+
+        // remember this always returns positive
+        float pitchHeadAngle = Vector3.Angle(upDirection, pitchTiltDirection);
+        
         if (_brakes)
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
@@ -260,6 +281,8 @@ public class SkyboardController : MonoBehaviour
         }
         
         //Change Pitch
+        
+        
         if (headsetZDistance < -_headsetZThresh)
         {
             float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
