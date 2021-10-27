@@ -24,6 +24,8 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private float _headsetXEndThresh = 0.5f;
     
     public float headsetZDistance;
+    public float headsetZAngle;
+    
     public float headsetXDistance;
     public float headsetYDistance;
     
@@ -150,8 +152,10 @@ public class SkyboardController : MonoBehaviour
         if (_brakes)
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            
+            rb.velocity = rb.velocity * 0.95f;
+            
+            rb.angularVelocity = rb.angularVelocity * 0.95f;
         }
         
         if (_stunned)
@@ -272,13 +276,13 @@ public class SkyboardController : MonoBehaviour
             pitchTorque = 0f; //if in deadzone just set to nothing
         }
 
-        float turnAnglePerFixedUpdate = 0.1f;
+        float turnAnglePerFixedUpdate = 0.05f;
         float torqueAmount = 3f;
         Quaternion leftQ;
         //control turning or yaw
         if (_leftTurn)
         {
-            var rot = Quaternion.AngleAxis(-5,transform.up);
+            var rot = Quaternion.AngleAxis(-15,transform.up);
             // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
             Vector3 direction = rot * transform.forward;
             // Create a quaternion (rotation) 
@@ -292,12 +296,12 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
             
             // apply torque along that axis according to the magnitude of the angle.
-            rb.angularVelocity = (cross * angleDiff  * torqueAmount);
+            rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
         }
 
         if (_rightTurn)
         {
-            var rot = Quaternion.AngleAxis(5,transform.up);
+            var rot = Quaternion.AngleAxis(15,transform.up);
             // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
             Vector3 direction = rot * transform.forward;
             // Create a quaternion (rotation) 
@@ -311,7 +315,7 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
 		
             // apply torque along that axis according to the magnitude of the angle.
-            rb.angularVelocity = cross * angleDiff  * torqueAmount;
+            rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
         }
         
         //change Pitch
@@ -320,7 +324,7 @@ public class SkyboardController : MonoBehaviour
         angularVelocityForLU = rb.angularVelocity;
 
         //change Roll
-        //rb.AddTorque(rollTorque * rb.transform.forward * _rollForce, ForceMode.Force);
+        //rb.angularVelocity += (rollTorque * rb.transform.forward * _rollForce);
 
         //push down more when not pressing fly
         if(_speedUp)
@@ -370,7 +374,7 @@ public class SkyboardController : MonoBehaviour
         if (other.gameObject.CompareTag("Ground")) return;
         
         
-        float SpeedLimitBeforeCrash = 5f;
+        float SpeedLimitBeforeCrash = 1f;
         
         if (speed > SpeedLimitBeforeCrash)
         {
