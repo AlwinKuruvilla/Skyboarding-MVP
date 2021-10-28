@@ -24,23 +24,24 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private float _headsetXThresh = 0.05f;
     [SerializeField] private float _headsetXEndThresh = 0.5f;
     
+    [Header("Debug Fields")]
+    public Rigidbody rb;
     public float headsetZDistance;
     public float headsetZAngle;
     
     public float headsetXDistance;
     public float headsetYDistance;
-    
-    private Vector3 _headsetIniPos;
-    private Vector3 _feetPos;
-
     [SerializeField] private bool _leftTurn = false;
     [SerializeField] private bool _rightTurn = false;
-
-    public Rigidbody rb;
+    
     public float speed = 12.5f;
     public float drag = 0f;
     public float percentage;
-
+    
+    
+    private Vector3 _headsetIniPos;
+    private Vector3 _feetPos;
+    
     private Vector3 rot;
     
     //collision detection
@@ -51,11 +52,47 @@ public class SkyboardController : MonoBehaviour
     private bool _stunned;
     private bool _speedUp;
     
+    [Header("Raycast Bomb")]
+    [SerializeField] private List<Transform> bottomRaycastTransforms;
+    [SerializeField] private float _bottomRayXOffset = 1.6f;
+    [SerializeField] private float _bottomRayZOffset = 0.8f;
+
     // Start is called before the first frame update
     void Start()
     {
-        Time.fixedDeltaTime = 1f / 72;
-            
+        Time.fixedDeltaTime = 1f / 72; // Prevents stutter: Set to match with headset settings
+        
+        // Initialize ray positions
+        //center rays
+        bottomRaycastTransforms[0].position = new Vector3(bottomRaycastTransforms[0].position.x,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); 
+        
+        bottomRaycastTransforms[1].position = new Vector3(bottomRaycastTransforms[0].position.x + _bottomRayXOffset,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //front ray
+        
+        bottomRaycastTransforms[2].position = new Vector3(bottomRaycastTransforms[0].position.x - _bottomRayXOffset,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //back ray
+
+        //left
+        bottomRaycastTransforms[3].position = new Vector3(bottomRaycastTransforms[0].position.x,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z + _bottomRayZOffset); 
+        
+        bottomRaycastTransforms[4].position = new Vector3(bottomRaycastTransforms[3].position.x + _bottomRayXOffset,
+            bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //front ray
+        
+        bottomRaycastTransforms[5].position = new Vector3(bottomRaycastTransforms[3].position.x - _bottomRayXOffset,
+            bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //back ray
+        
+        //right
+        bottomRaycastTransforms[6].position = new Vector3(bottomRaycastTransforms[0].position.x,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z - _bottomRayZOffset); 
+        
+        bottomRaycastTransforms[7].position = new Vector3(bottomRaycastTransforms[6].position.x + _bottomRayXOffset,
+            bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //front ray
+        
+        bottomRaycastTransforms[8].position = new Vector3(bottomRaycastTransforms[6].position.x - _bottomRayXOffset,
+            bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //back ray
+        
         rb = GetComponent<Rigidbody>();
         rot = transform.eulerAngles;
         
@@ -81,6 +118,7 @@ public class SkyboardController : MonoBehaviour
         _feetPos = new Vector3(0f, 0f, 0f);
     }
 
+    #region InputActionCallbacks
     private void OnBrakePressed(InputAction.CallbackContext obj)
     {
         Debug.Log("brakes pressed");
@@ -119,11 +157,15 @@ public class SkyboardController : MonoBehaviour
         _leftTurn = true;
     }
 
+    #endregion
+    
+
     // Update is called once per frame
-    void Update()
+    void Update ()
     {
     }
 
+    [Header("Flying Physics")]
     public float FlyingSpeed = 20f;
     public float FlyingAdjustmentSpeed = 2f; //how quickly our velocity adjusts to the flying speed
     public float FlyingAcceleration = 4f;
@@ -132,7 +174,7 @@ public class SkyboardController : MonoBehaviour
     private float FlyingAdjustmentLerp = 0; //the lerp for our adjustment amount
     private float ActGravAmt; //the actual gravity that is applied to our character
     
-    [Header("Flying Physics")]
+    [Header("Board Gravity")]
     public float FlyingGravityAmt = 2f; //how much gravity will pull us down when flying
     public float GlideGravityAmt = 4f; //how much gravity affects us when just gliding
     public float FlyingGravBuildSpeed = 0.2f; //how much our gravity is lerped when stopping flying
@@ -151,6 +193,35 @@ public class SkyboardController : MonoBehaviour
     
     private void FixedUpdate()
     {
+        // Create raycast bomb here 
+        //bottom of board raycasts
+        for (int i = 0; i < bottomRaycastTransforms.Count; i++)
+        {
+            Debug.DrawRay(bottomRaycastTransforms[i].position, -transform.up, Color.magenta);
+        }
+        
+        //top of board raycasts
+        for (int i = 0; i < bottomRaycastTransforms.Count; i++)
+        {
+            Debug.DrawRay(bottomRaycastTransforms[i].position, transform.up, Color.yellow);
+        }
+
+        //side of board raycasts
+        float angleDegree = 15;
+        Vector3 noAngle = transform.forward;
+
+        for (int i = 0; i < 360/angleDegree; i++)
+        {
+            Quaternion spreadAngle = Quaternion.AngleAxis(angleDegree*i, transform.up);
+            Vector3 newVector = spreadAngle * noAngle;
+            Debug.DrawRay(transform.position, newVector*3f, Color.black);
+            
+            //create ray
+            Ray ray = new Ray (transform.position, newVector);
+        }
+
+        //change velocity and add torque accordingly
+        
         if (_brakes)
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
@@ -232,18 +303,17 @@ public class SkyboardController : MonoBehaviour
         float FlyLerpSpd = FlyingAdjustmentSpeed * FlyingAdjustmentLerp;
         Vector3 targetVelocity = transform.forward * speed;
         
-        //CHANGE THESE INTO ROTATIONS
-        //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
+        // this along with hand distance can be used to increase or decrease drag
+        // CURRENTLY NOT BEING USED
+        headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
         
-        // this controls pitch
+        #region Steering 
+        
+        // this sets pitch direction
         headsetZDistance = (-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
-        // this controls roll
+        // this sets roll direction
         headsetXDistance = (0f -_headset.localPosition.x); 
-        
-        // this can be used to increase or decrease drag
-        // CURRENTLY NO BEING USED
-        headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
         
         // PITCH //
         //Calculate Pitch
@@ -274,8 +344,7 @@ public class SkyboardController : MonoBehaviour
 
         //Apply Pitch
         rb.AddTorque(transform.right * pitchHeadAngle  * _pitchDampeningFactor, ForceMode.Force);
-        
-        
+
         // ROLL //
         //Calculate Roll
         
@@ -343,7 +412,8 @@ public class SkyboardController : MonoBehaviour
             // apply torque along that axis according to the magnitude of the angle.
             rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
         }
-
+        #endregion
+        
         //push down more when not pressing fly
         if(_speedUp)
             ActGravAmt = Mathf.Lerp(ActGravAmt, FlyingGravityAmt, FlyingGravBuildSpeed * 4f * Time.deltaTime);
@@ -356,6 +426,7 @@ public class SkyboardController : MonoBehaviour
         Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
         rb.velocity = dir;
     }
+
 
     //rotate our upwards direction
     void RotateSelf(Vector3 Direction, float d, float GravitySpd)
