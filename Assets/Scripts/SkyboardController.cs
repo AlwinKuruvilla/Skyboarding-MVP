@@ -144,19 +144,20 @@ public class SkyboardController : MonoBehaviour
     [Header("Turning")] 
     public float pitchHeadAngle;
     public float maxPitchAngle;
-    public float pitchTorque;
-    public float rollTorque;
+    public float rollHeadAngle;
+    public float maxRollAngle;
     [SerializeField] private float _pitchDampeningFactor = 0.95f;
-    [SerializeField] private float _rollForce = 50f;
+    [SerializeField] private float _rollDampeningFactor = 0.95f;
+    
     private void FixedUpdate()
     {
         if (_brakes)
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
             
-            rb.velocity = rb.velocity * 0.95f;
+            rb.velocity = rb.velocity * 0.98f;
             
-            rb.angularVelocity = rb.angularVelocity * 0.95f;
+            rb.angularVelocity = rb.angularVelocity * 0.98f;
         }
         
         if (_stunned)
@@ -243,24 +244,8 @@ public class SkyboardController : MonoBehaviour
         // this can be used to increase or decrease drag
         // CURRENTLY NO BEING USED
         headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
-
-        //Change Roll
-        if (headsetXDistance < -_headsetXThresh)
-        {
-            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            rollTorque = Mathf.Lerp(0, -1, -lerpPct);
-        }
-        else if (headsetXDistance > _headsetXThresh)
-        {
-            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            rollTorque = Mathf.Lerp(0, 1, lerpPct);
-        }
-        else
-        { 
-            rollTorque = 0f;
-        }
         
-        
+        // PITCH //
         //Calculate Pitch
         
         Vector3 earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
@@ -291,7 +276,32 @@ public class SkyboardController : MonoBehaviour
         rb.AddTorque(transform.right * pitchHeadAngle  * _pitchDampeningFactor, ForceMode.Force);
         
         
-        //Yaw
+        // ROLL //
+        //Calculate Roll
+        
+        earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
+        
+        Debug.DrawLine(transform.TransformPoint(_feetPos), 
+            transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(1, 1, 0))), // zero out the z pos
+            Color.yellow);
+        
+        upDirection = transform.up;
+        Vector3 rollTiltDirection = transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(1, 1, 0))) - transform.TransformPoint(_feetPos);
+
+        // remember this always returns positive
+        rollHeadAngle = Vector3.Angle(upDirection, rollTiltDirection);
+        
+        // if headset is leaning (left?), make the angle negative
+        if (headsetXDistance < 0)
+        {
+            rollHeadAngle = -rollHeadAngle;
+        }
+
+        //Apply 
+        rb.AddTorque(transform.forward * rollHeadAngle  * _rollDampeningFactor, ForceMode.Force);
+        
+        
+        // YAW //
         float turnAnglePerFixedUpdate = 0.05f;
         float torqueAmount = 3f;
         Quaternion leftQ;
@@ -312,7 +322,7 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
             
             // apply torque along that axis according to the magnitude of the angle.
-            rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
+            rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
         }
 
         if (_rightTurn)
@@ -331,11 +341,8 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
 		
             // apply torque along that axis according to the magnitude of the angle.
-            rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
+            rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
         }
-
-        //change Roll
-        //rb.angularVelocity += (rollTorque * rb.transform.forward * _rollForce);
 
         //push down more when not pressing fly
         if(_speedUp)
@@ -377,7 +384,7 @@ public class SkyboardController : MonoBehaviour
         if (other.gameObject.CompareTag("Ground")) return;
         
         
-        float SpeedLimitBeforeCrash = 1f;
+        float SpeedLimitBeforeCrash = 5f;
         
         if (speed > SpeedLimitBeforeCrash)
         {
