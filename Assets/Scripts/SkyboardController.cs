@@ -140,36 +140,16 @@ public class SkyboardController : MonoBehaviour
     [Header("Wall Impact")]
     public float StunnedTime = 0.25f; //how long we are stunned for
     private float StunTimer; //the in use stun timer
-    
-    [Header("Turning")]
+
+    [Header("Turning")] 
+    public float pitchHeadAngle;
+    public float maxPitchAngle;
     public float pitchTorque;
     public float rollTorque;
-    [SerializeField] private float _pitchForce = 50f;
+    [SerializeField] private float _pitchDampeningFactor = 0.95f;
     [SerializeField] private float _rollForce = 50f;
-
-
-    private Vector3 velocityforLU;
-    private Vector3 angularVelocityForLU;
     private void FixedUpdate()
     {
-        Vector3 earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
-        
-        Debug.DrawLine(transform.TransformPoint(_feetPos), 
-            transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))), // zero out the x pos
-            Color.blue);
-        
-        float heightDistance = Vector3.Distance(transform.TransformPoint(_feetPos), _earPos.position); // for matching distance (to look nice)
-        
-        Debug.DrawLine(transform.TransformPoint(new Vector3(_feetPos.x, _feetPos.y + heightDistance, _feetPos.z)), 
-            transform.TransformPoint(_feetPos),
-            Color.cyan); // Neutral up direction 0 degrees
-
-        Vector3 upDirection = transform.up;
-        Vector3 pitchTiltDirection = transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))) - transform.TransformPoint(_feetPos);
-
-        // remember this always returns positive
-        float pitchHeadAngle = Vector3.Angle(upDirection, pitchTiltDirection);
-        
         if (_brakes)
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
@@ -280,25 +260,38 @@ public class SkyboardController : MonoBehaviour
             rollTorque = 0f;
         }
         
-        //Change Pitch
         
+        //Calculate Pitch
         
-        if (headsetZDistance < -_headsetZThresh)
+        Vector3 earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
+        
+        Debug.DrawLine(transform.TransformPoint(_feetPos), 
+            transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))), // zero out the x pos
+            Color.blue);
+        
+        float heightDistance = Vector3.Distance(transform.TransformPoint(_feetPos), _earPos.position); // for matching distance (to look nice)
+        
+        Debug.DrawLine(transform.TransformPoint(new Vector3(_feetPos.x, _feetPos.y + heightDistance, _feetPos.z)), 
+            transform.TransformPoint(_feetPos),
+            Color.cyan); // Neutral up direction 0 degrees
+
+        Vector3 upDirection = transform.up;
+        Vector3 pitchTiltDirection = transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))) - transform.TransformPoint(_feetPos);
+
+        // remember this always returns positive
+        pitchHeadAngle = Vector3.Angle(upDirection, pitchTiltDirection);
+        
+        // if headset is leaning back, make the angle negative
+        if (headsetZDistance < 0)
         {
-            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            // changes the percentage value of the position of the headset within the range to match a number between a and b
-            pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
-        }
-        else if (headsetZDistance > _headsetZThresh)
-        {
-            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
-        }
-        else
-        {
-            pitchTorque = 0f; //if in deadzone just set to nothing
+            pitchHeadAngle = -pitchHeadAngle;
         }
 
+        //Apply Pitch
+        rb.AddTorque(transform.right * pitchHeadAngle  * _pitchDampeningFactor, ForceMode.Force);
+        
+        
+        //Yaw
         float turnAnglePerFixedUpdate = 0.05f;
         float torqueAmount = 3f;
         Quaternion leftQ;
@@ -340,11 +333,6 @@ public class SkyboardController : MonoBehaviour
             // apply torque along that axis according to the magnitude of the angle.
             rb.AddTorque(cross * angleDiff  * torqueAmount, ForceMode.Force);
         }
-        
-        //change Pitch
-        rb.angularVelocity += (pitchTorque * rb.transform.right * _pitchForce);
-
-        angularVelocityForLU = rb.angularVelocity;
 
         //change Roll
         //rb.angularVelocity += (rollTorque * rb.transform.forward * _rollForce);
@@ -360,14 +348,6 @@ public class SkyboardController : MonoBehaviour
         //lerp velocity
         Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
         rb.velocity = dir;
-
-        velocityforLU = rb.velocity;
-    }
-
-    private void LateUpdate()
-    {
-        rb.velocity = velocityforLU;
-        rb.angularVelocity = angularVelocityForLU;
     }
 
     //rotate our upwards direction
