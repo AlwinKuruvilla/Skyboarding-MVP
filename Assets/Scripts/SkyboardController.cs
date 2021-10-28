@@ -56,6 +56,7 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private List<Transform> bottomRaycastTransforms;
     [SerializeField] private float _bottomRayXOffset = 1.6f;
     [SerializeField] private float _bottomRayZOffset = 0.8f;
+    [SerializeField] private float _angleDegree = 15; //for side rays
 
     // Start is called before the first frame update
     void Start()
@@ -194,30 +195,82 @@ public class SkyboardController : MonoBehaviour
     private void FixedUpdate()
     {
         // Create raycast bomb here 
+        // NOTE: can change layermask to bitwise operator later to only collide with game level 
+        int layerMask =~ LayerMask.GetMask("Ignore Raycast");
         //bottom of board raycasts
         for (int i = 0; i < bottomRaycastTransforms.Count; i++)
         {
             Debug.DrawRay(bottomRaycastTransforms[i].position, -transform.up, Color.magenta);
+            
+            //create ray
+            RaycastHit hit;
+
+            if (Physics.Raycast(bottomRaycastTransforms[i].position, -transform.up, out hit, 1f, layerMask))
+            {
+                Debug.Log("bottom ray" + i + " colliding with " + hit.transform.gameObject.name);
+                
+                //check if grounded, in this case use collided bool
+                if (!_collided)
+                {
+                    rb.useGravity = true;
+
+                    _collided = true;
+                    //slow velocity (or apply velocity in the normal's direction?)
+                    //rb.velocity *= 0.95f;
+                }
+            }
+            else
+            {
+                rb.useGravity = false;
+                _collided = false;
+            }
         }
         
         //top of board raycasts
         for (int i = 0; i < bottomRaycastTransforms.Count; i++)
         {
             Debug.DrawRay(bottomRaycastTransforms[i].position, transform.up, Color.yellow);
+            
+            //create ray
+            RaycastHit hit;
+            
+            if (Physics.Raycast(bottomRaycastTransforms[i].position, transform.up, out hit, 1f, layerMask))
+            {
+                Debug.Log("top ray"+ i +" colliding with " + hit.transform.gameObject.name);
+                
+                //check if grounded, in this case use collided bool
+                if (!_collided)
+                {
+                    //slow velocity (or apply velocity in the normal's direction?)
+                    rb.velocity += hit.normal.normalized;
+                }
+            }
         }
 
         //side of board raycasts
-        float angleDegree = 15;
         Vector3 noAngle = transform.forward;
 
-        for (int i = 0; i < 360/angleDegree; i++)
+        for (int i = 0; i < 360/_angleDegree; i++)
         {
-            Quaternion spreadAngle = Quaternion.AngleAxis(angleDegree*i, transform.up);
+            Quaternion spreadAngle = Quaternion.AngleAxis(_angleDegree*i, transform.up);
             Vector3 newVector = spreadAngle * noAngle;
             Debug.DrawRay(transform.position, newVector*3f, Color.black);
             
             //create ray
-            Ray ray = new Ray (transform.position, newVector);
+            RaycastHit hit;
+            
+            if (Physics.Raycast(transform.position, newVector, out hit, 3f, layerMask))
+            {
+                Debug.Log("side ray"+ i +" colliding with " + hit.transform.gameObject.name);
+                
+                //check if grounded, in this case use collided bool
+                if (!_collided)
+                {
+                    rb.velocity *= 0.98f; //slow 
+                    //rotate to make the board face up in relation to surface
+                    RotateSelf(hit.normal, Time.deltaTime, ActGravAmt);
+                }
+            }
         }
 
         //change velocity and add torque accordingly
@@ -453,8 +506,7 @@ public class SkyboardController : MonoBehaviour
         _collided = true;
         
         if (other.gameObject.CompareTag("Ground")) return;
-        
-        
+
         float SpeedLimitBeforeCrash = 5f;
         
         if (speed > SpeedLimitBeforeCrash)
