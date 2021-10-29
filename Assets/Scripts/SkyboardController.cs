@@ -54,8 +54,8 @@ public class SkyboardController : MonoBehaviour
     
     [Header("Raycast Bomb")]
     [SerializeField] private List<Transform> bottomRaycastTransforms;
-    [SerializeField] private float _bottomRayXOffset = 1.6f;
-    [SerializeField] private float _bottomRayZOffset = 0.8f;
+    [SerializeField] private float _RayXOffset = 1.6f;
+    [SerializeField] private float _RayZOffset = 0.5f;
     [SerializeField] private float _angleDegree = 15; //for side rays
 
     // Start is called before the first frame update
@@ -68,30 +68,30 @@ public class SkyboardController : MonoBehaviour
         bottomRaycastTransforms[0].position = new Vector3(bottomRaycastTransforms[0].position.x,
             bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); 
         
-        bottomRaycastTransforms[1].position = new Vector3(bottomRaycastTransforms[0].position.x + _bottomRayXOffset,
+        bottomRaycastTransforms[1].position = new Vector3(bottomRaycastTransforms[0].position.x + _RayXOffset,
             bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //front ray
         
-        bottomRaycastTransforms[2].position = new Vector3(bottomRaycastTransforms[0].position.x - _bottomRayXOffset,
+        bottomRaycastTransforms[2].position = new Vector3(bottomRaycastTransforms[0].position.x - _RayXOffset,
             bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //back ray
 
         //left
         bottomRaycastTransforms[3].position = new Vector3(bottomRaycastTransforms[0].position.x,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z + _bottomRayZOffset); 
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z + _RayZOffset); 
         
-        bottomRaycastTransforms[4].position = new Vector3(bottomRaycastTransforms[3].position.x + _bottomRayXOffset,
+        bottomRaycastTransforms[4].position = new Vector3(bottomRaycastTransforms[3].position.x + _RayXOffset,
             bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //front ray
         
-        bottomRaycastTransforms[5].position = new Vector3(bottomRaycastTransforms[3].position.x - _bottomRayXOffset,
+        bottomRaycastTransforms[5].position = new Vector3(bottomRaycastTransforms[3].position.x - _RayXOffset,
             bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //back ray
         
         //right
         bottomRaycastTransforms[6].position = new Vector3(bottomRaycastTransforms[0].position.x,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z - _bottomRayZOffset); 
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z - _RayZOffset); 
         
-        bottomRaycastTransforms[7].position = new Vector3(bottomRaycastTransforms[6].position.x + _bottomRayXOffset,
+        bottomRaycastTransforms[7].position = new Vector3(bottomRaycastTransforms[6].position.x + _RayXOffset,
             bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //front ray
         
-        bottomRaycastTransforms[8].position = new Vector3(bottomRaycastTransforms[6].position.x - _bottomRayXOffset,
+        bottomRaycastTransforms[8].position = new Vector3(bottomRaycastTransforms[6].position.x - _RayXOffset,
             bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //back ray
         
         rb = GetComponent<Rigidbody>();
@@ -216,7 +216,7 @@ public class SkyboardController : MonoBehaviour
 
                     _collided = true;
                     //slow velocity (or apply velocity in the normal's direction?)
-                    //rb.velocity *= 0.95f;
+                    //rb.velocity *= 0.98f;
                 }
             }
             else
@@ -245,7 +245,7 @@ public class SkyboardController : MonoBehaviour
                     rb.velocity += hit.normal.normalized;
                 }
             }
-        }
+        } 
 
         //side of board raycasts
         Vector3 noAngle = transform.forward;
@@ -254,19 +254,18 @@ public class SkyboardController : MonoBehaviour
         {
             Quaternion spreadAngle = Quaternion.AngleAxis(_angleDegree*i, transform.up);
             Vector3 newVector = spreadAngle * noAngle;
-            Debug.DrawRay(transform.position, newVector*3f, Color.black);
+            Debug.DrawRay(transform.position, newVector*2f, Color.black);
             
             //create ray
             RaycastHit hit;
             
-            if (Physics.Raycast(transform.position, newVector, out hit, 3f, layerMask))
+            if (Physics.Raycast(transform.position, newVector, out hit, 2f, layerMask))
             {
                 Debug.Log("side ray"+ i +" colliding with " + hit.transform.gameObject.name);
                 
                 //check if grounded, in this case use collided bool
                 if (!_collided)
                 {
-                    rb.velocity *= 0.98f; //slow 
                     //rotate to make the board face up in relation to surface
                     RotateSelf(hit.normal, Time.deltaTime, ActGravAmt);
                 }
@@ -425,7 +424,7 @@ public class SkyboardController : MonoBehaviour
         
         // YAW //
         float turnAnglePerFixedUpdate = 0.05f;
-        float torqueAmount = 3f;
+        float torqueAmount = 5f;
         Quaternion leftQ;
         //control turning or yaw
         if (_leftTurn)
