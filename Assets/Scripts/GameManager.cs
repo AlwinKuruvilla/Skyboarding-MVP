@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using TMPro;
 using UnityEditor;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
@@ -24,9 +23,9 @@ public class GameManager : MonoBehaviour
     public TMP_Text timeValue;
     public TMP_Text finalLevelScore;
 
-    public SceneAsset currentLevel;
-    public SceneAsset nextLevel;
-    public SceneAsset menu;
+    // public SceneAsset currentLevel;
+    // public SceneAsset nextLevel;
+    // public SceneAsset menu;
 
     public GameObject winWindowPrefab;
     private GameObject winWindowInstance;

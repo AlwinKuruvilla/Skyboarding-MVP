@@ -70,6 +70,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetGuid:
     RawGuidValue: 61b6ef4ffff3d8f4498968869591d6bf
+--- !u!114 &-6983179653718030139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 929548324, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: ~MISSING~Skyboard-Alwin
+  m_EditorClassIdentifier: 
+  AssetGuid:
+    RawGuidValue: 43a32ae465540084bbe46a18c19eede2
 --- !u!114 &-6752618747029122786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,6 +154,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetGuid:
     RawGuidValue: 86a57551904392140ac3eced8aab7ac5
+--- !u!114 &-5251426418954320664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -571403812, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: Basic XR Rig
+  m_EditorClassIdentifier: 
+  AssetGuid:
+    RawGuidValue: 7143811ff07ad124c8d190ef1fb1b770
+--- !u!114 &-4965143457509000792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 929548324, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: ~MISSING~Player-Skyboard
+  m_EditorClassIdentifier: 
+  AssetGuid:
+    RawGuidValue: 3c346d52a60316345bf0f43135fe64d2
 --- !u!114 &-2760612021914292270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,6 +196,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetGuid:
     RawGuidValue: 899e91a14d0ac0a49a6a33934ed14e82
+--- !u!114 &-2393763166451183850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -571403812, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: SkyboardPlayerXR
+  m_EditorClassIdentifier: 
+  AssetGuid:
+    RawGuidValue: 109c6d458a6a52a4a8ca26659ec6615b
 --- !u!114 &-465291207295852542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,6 +238,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetGuid:
     RawGuidValue: 4471ec709e77640a8ad8527ff88e9dd7
+--- !u!114 &-259548090304102009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -571403812, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: Skyboard-XRRig
+  m_EditorClassIdentifier: 
+  AssetGuid:
+    RawGuidValue: a5f5f3025a640484b823231574dd6925
 --- !u!114 &-208248194798464765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,8 +385,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -571403812, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: SkyboardPlayer
+  m_Script: {fileID: 929548324, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: ~MISSING~SkyboardPlayer
   m_EditorClassIdentifier: 
   AssetGuid:
     RawGuidValue: 387fe9e5e705387498cdf8b9440f4391
@@ -404,6 +474,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetGuid:
     RawGuidValue: a7e996aabfe873348b3886526d1b6e39
+--- !u!114 &6010575703185797639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -571403812, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: FusionPlayer
+  m_EditorClassIdentifier: 
+  AssetGuid:
+    RawGuidValue: b21fd73e3498776479188a8ec2583593
 --- !u!114 &7187231180766291887
 MonoBehaviour:
   m_ObjectHideFlags: 0
