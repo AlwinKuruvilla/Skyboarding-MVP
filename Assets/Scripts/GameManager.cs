@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
-using UnityEditor.SearchService;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
-using Scene = UnityEngine.SceneManagement.Scene;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,9 +16,9 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     public TMP_Text timeValue;
 
-    public SceneAsset currentLevel;
-    public SceneAsset nextLevel;
-    public SceneAsset menu;
+    // public SceneAsset currentLevel;
+    // public SceneAsset nextLevel;
+    // public SceneAsset menu;
 
     public GameObject[] players;
     public float[] playerHps;

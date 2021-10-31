@@ -373,8 +373,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speedUpInput: {fileID: 11711766586467970, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
   _brakeInput: {fileID: -1644001223835636349, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
-  _leftTurnButton: {fileID: 2526168894431210536, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
-  _rightTurnButton: {fileID: -5684558904543120851, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
+  _leftTurnButton: {fileID: 6976394061837971580, guid: 28d0adc60806f894a93b9bd0f80bd24a, type: 3}
+  _rightTurnButton: {fileID: 1443005053615697449, guid: 28d0adc60806f894a93b9bd0f80bd24a, type: 3}
   _turnDampening: 1.5
   _headset: {fileID: 8156819120091669844}
   _headsetZThresh: 0.1
