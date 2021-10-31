@@ -8,8 +8,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class MovingChaseObject : MonoBehaviour
 {
-    public int pointValue = 300;
-    
+   
     public Transform objectTarget;
     public float turnSpeed = 5f;
     public float speed = 50f;

@@ -156,9 +156,7 @@ public class SkyboardController : MonoBehaviour
     {
         _leftTurn = true;
     }
-
-    #endregion
-    
+  
 
     // Update is called once per frame
     void Update ()
