@@ -13,17 +13,19 @@ public class MovingChaseObject : MonoBehaviour
     public float speed = 50f;
     public float range = 30f;
     public float slowDownDuration = 3f;
-
-    public int pointValue = 100; // set default point value
+    
+    public int pointValue = 200; // set default point value
     public GameObject[] players;
     private Rigidbody _objectRgb;
+
+    [Header("References")]
+    
     
     public string enemyTag = "Player";
 
     void Start()
     {
         _objectRgb = GetComponent<Rigidbody>(); //component reference of the object's rigid body 
-        
     }
 
     private void FixedUpdate()
@@ -48,28 +50,16 @@ public class MovingChaseObject : MonoBehaviour
 
         if (nearestPlayer != null && shortestDistance <= range) //checks to see if the nearestPlayer object is in range then makes object move in the opposite direction of nearestPlayer if it is
         {
-           Vector3 direction = nearestPlayer.transform.position -  _objectRgb.position;
+           Vector3 direction = nearestPlayer.transform.position -  _objectRgb.position; // direction to the player
            direction.Normalize();
            Vector3 rotationAmount = Vector3.Cross(this.gameObject.transform.forward, direction);
-           _objectRgb.angularVelocity = rotationAmount * turnSpeed;
+           _objectRgb.angularVelocity = (rotationAmount * turnSpeed);
            _objectRgb.velocity = this.gameObject.transform.forward * -speed; 
         }
         else //stops the object if there is no player in range
         {
             StartCoroutine(SlowDown(_objectRgb, slowDownDuration)); //calls LERP function to slow the object down until it stops
         }
-
-
-    }
-
-    public void OnCollisionEnter(Collision other)
-    {
-        _objectRgb.rotation = Quaternion.AngleAxis(45, Vector3.left);
-    }
-
-    public void ObjectType1()
-    {
-        
     }
 
     IEnumerator SlowDown(Rigidbody objectToSlow, float duration) //LERP function to slow down an object until it stops
