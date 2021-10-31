@@ -119,41 +119,40 @@ public class SkyboardController : MonoBehaviour
         _feetPos = new Vector3(0f, 0f, 0f);
     }
 
-    #region InputActionCallbacks
-    private void OnBrakePressed(InputAction.CallbackContext obj)
+    private void OnBrakePressed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         Debug.Log("brakes pressed");
         _brakes = true;
     }
 
-    private void OnSpeedUpCancel(InputAction.CallbackContext obj)
+    private void OnSpeedUpCancel(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         _speedUp = false;
     }
 
-    private void OnSpeedUp(InputAction.CallbackContext obj)
+    private void OnSpeedUp(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         _speedUp = true;
 
         _brakes = false;
     }
 
-    private void OnRightTurnCancel(InputAction.CallbackContext obj)
+    private void OnRightTurnCancel(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         _rightTurn = false;
     }
 
-    private void OnLeftTurnCancel(InputAction.CallbackContext obj)
+    private void OnLeftTurnCancel(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         _leftTurn = false;
     }
 
-    private void OnRightTurnButton(InputAction.CallbackContext obj)
+    private void OnRightTurnButton(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         _rightTurn = true;
     }
 
-    private void OnLeftTurnButton(InputAction.CallbackContext obj)
+    private void OnLeftTurnButton(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         _leftTurn = true;
     }
