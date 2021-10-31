@@ -8,6 +8,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class MovingChaseObject : MonoBehaviour
 {
+    public int pointValue = 300;
+    
     public Transform objectTarget;
     public float turnSpeed = 5f;
     public float speed = 50f;
@@ -37,8 +39,8 @@ public class MovingChaseObject : MonoBehaviour
 
         float shortestDistance = Mathf.Infinity; //default value set for shortestDistance
         GameObject nearestPlayer = null;         //default value set for nearest player
-
-        foreach (GameObject player in players)   // runs through the players array to check the distance been each player and the object and update which one is closest to the object
+        
+        foreach (GameObject player in players) // runs through the players array to check the distance been each player and the object and update which one is closest to the object
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position); // gets distance between object and player game object
             if (distanceToPlayer < shortestDistance) // checks to see if the distanceToPlayer is less than last recorded shortestDistance
@@ -61,7 +63,7 @@ public class MovingChaseObject : MonoBehaviour
             StartCoroutine(SlowDown(_objectRgb, slowDownDuration)); //calls LERP function to slow the object down until it stops
         }
     }
-
+    
     IEnumerator SlowDown(Rigidbody objectToSlow, float duration) //LERP function to slow down an object until it stops
     {
         float time = 0;
@@ -84,5 +86,4 @@ public class MovingChaseObject : MonoBehaviour
     {
         Gizmos.DrawWireSphere(transform.position, range);
     }
-
 }

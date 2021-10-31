@@ -13,6 +13,7 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private InputActionReference _rightTurnButton;
     [SerializeField] private float _turnDampening = 2f;
     [SerializeField] private Transform _headset;
+    [SerializeField] private Transform _earPos;
     
     // Make sure XRRig is zeroed out
     // lerp between these two values based on percent
@@ -23,20 +24,24 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private float _headsetXThresh = 0.05f;
     [SerializeField] private float _headsetXEndThresh = 0.5f;
     
+    [Header("Debug Fields")]
+    public Rigidbody rb;
     public float headsetZDistance;
+    public float headsetZAngle;
+    
     public float headsetXDistance;
     public float headsetYDistance;
-    
-    private Vector3 _headsetIniPos;
-
     [SerializeField] private bool _leftTurn = false;
     [SerializeField] private bool _rightTurn = false;
-
-    public Rigidbody rb;
+    
     public float speed = 12.5f;
     public float drag = 0f;
     public float percentage;
-
+    
+    
+    private Vector3 _headsetIniPos;
+    private Vector3 _feetPos;
+    
     private Vector3 rot;
     
     //collision detection
@@ -47,11 +52,48 @@ public class SkyboardController : MonoBehaviour
     private bool _stunned;
     private bool _speedUp;
     
+    [Header("Raycast Bomb")]
+    [SerializeField] private List<Transform> bottomRaycastTransforms;
+    [SerializeField] private float _RayXOffset = 1.6f;
+    [SerializeField] private float _RayZOffset = 0.5f;
+    [SerializeField] private float _angleDegree = 15; //for side rays
+
     // Start is called before the first frame update
     void Start()
     {
-        Time.fixedDeltaTime = 1f / 72;
-            
+        Time.fixedDeltaTime = 1f / 72; // Prevents stutter: Set to match with headset settings
+        
+        // Initialize ray positions
+        //center rays
+        bottomRaycastTransforms[0].position = new Vector3(bottomRaycastTransforms[0].position.x,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); 
+        
+        bottomRaycastTransforms[1].position = new Vector3(bottomRaycastTransforms[0].position.x + _RayXOffset,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //front ray
+        
+        bottomRaycastTransforms[2].position = new Vector3(bottomRaycastTransforms[0].position.x - _RayXOffset,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //back ray
+
+        //left
+        bottomRaycastTransforms[3].position = new Vector3(bottomRaycastTransforms[0].position.x,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z + _RayZOffset); 
+        
+        bottomRaycastTransforms[4].position = new Vector3(bottomRaycastTransforms[3].position.x + _RayXOffset,
+            bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //front ray
+        
+        bottomRaycastTransforms[5].position = new Vector3(bottomRaycastTransforms[3].position.x - _RayXOffset,
+            bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //back ray
+        
+        //right
+        bottomRaycastTransforms[6].position = new Vector3(bottomRaycastTransforms[0].position.x,
+            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z - _RayZOffset); 
+        
+        bottomRaycastTransforms[7].position = new Vector3(bottomRaycastTransforms[6].position.x + _RayXOffset,
+            bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //front ray
+        
+        bottomRaycastTransforms[8].position = new Vector3(bottomRaycastTransforms[6].position.x - _RayXOffset,
+            bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //back ray
+        
         rb = GetComponent<Rigidbody>();
         rot = transform.eulerAngles;
         
@@ -74,10 +116,10 @@ public class SkyboardController : MonoBehaviour
     private void InitializePositions()
     {
         _headsetIniPos = _headset.localPosition;
+        _feetPos = new Vector3(0f, 0f, 0f);
     }
 
     private void OnBrakePressed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-
     {
         Debug.Log("brakes pressed");
         _brakes = true;
@@ -115,11 +157,15 @@ public class SkyboardController : MonoBehaviour
         _leftTurn = true;
     }
 
+    #endregion
+    
+
     // Update is called once per frame
-    void Update()
+    void Update ()
     {
     }
 
+    [Header("Flying Physics")]
     public float FlyingSpeed = 20f;
     public float FlyingAdjustmentSpeed = 2f; //how quickly our velocity adjusts to the flying speed
     public float FlyingAcceleration = 4f;
@@ -128,7 +174,7 @@ public class SkyboardController : MonoBehaviour
     private float FlyingAdjustmentLerp = 0; //the lerp for our adjustment amount
     private float ActGravAmt; //the actual gravity that is applied to our character
     
-    [Header("Flying Physics")]
+    [Header("Board Gravity")]
     public float FlyingGravityAmt = 2f; //how much gravity will pull us down when flying
     public float GlideGravityAmt = 4f; //how much gravity affects us when just gliding
     public float FlyingGravBuildSpeed = 0.2f; //how much our gravity is lerped when stopping flying
@@ -136,26 +182,104 @@ public class SkyboardController : MonoBehaviour
     [Header("Wall Impact")]
     public float StunnedTime = 0.25f; //how long we are stunned for
     private float StunTimer; //the in use stun timer
+
+    [Header("Turning")] 
+    public float pitchHeadAngle;
+    public float maxPitchAngle;
+    public float rollHeadAngle;
+    public float maxRollAngle;
+    [SerializeField] private float _pitchDampeningFactor = 0.95f;
+    [SerializeField] private float _rollDampeningFactor = 0.95f;
     
-    [Header("Turning")]
-    public float pitchTorque;
-    public float rollTorque;
-    [SerializeField] private float _pitchForce = 50f;
-    [SerializeField] private float _rollForce = 50f;
-
-
-    private Vector3 velocityforLU;
-    private Vector3 angularVelocityForLU;
     private void FixedUpdate()
     {
+        // Create raycast bomb here 
+        // NOTE: can change layermask to bitwise operator later to only collide with game level 
+        int layerMask =~ LayerMask.GetMask("Ignore Raycast");
+        //bottom of board raycasts
+        for (int i = 0; i < bottomRaycastTransforms.Count; i++)
+        {
+            Debug.DrawRay(bottomRaycastTransforms[i].position, -transform.up, Color.magenta);
+            
+            //create ray
+            RaycastHit hit;
+
+            if (Physics.Raycast(bottomRaycastTransforms[i].position, -transform.up, out hit, 1f, layerMask))
+            {
+                Debug.Log("bottom ray" + i + " colliding with " + hit.transform.gameObject.name);
+                
+                //check if grounded, in this case use collided bool
+                if (!_collided)
+                {
+                    rb.useGravity = true;
+
+                    _collided = true;
+                    //slow velocity (or apply velocity in the normal's direction?)
+                    //rb.velocity *= 0.98f;
+                }
+            }
+            else
+            {
+                rb.useGravity = false;
+                _collided = false;
+            }
+        }
+        
+        //top of board raycasts
+        for (int i = 0; i < bottomRaycastTransforms.Count; i++)
+        {
+            Debug.DrawRay(bottomRaycastTransforms[i].position, transform.up, Color.yellow);
+            
+            //create ray
+            RaycastHit hit;
+            
+            if (Physics.Raycast(bottomRaycastTransforms[i].position, transform.up, out hit, 1f, layerMask))
+            {
+                Debug.Log("top ray"+ i +" colliding with " + hit.transform.gameObject.name);
+                
+                //check if grounded, in this case use collided bool
+                if (!_collided)
+                {
+                    //slow velocity (or apply velocity in the normal's direction?)
+                    rb.velocity += hit.normal.normalized;
+                }
+            }
+        } 
+
+        //side of board raycasts
+        Vector3 noAngle = transform.forward;
+
+        for (int i = 0; i < 360/_angleDegree; i++)
+        {
+            Quaternion spreadAngle = Quaternion.AngleAxis(_angleDegree*i, transform.up);
+            Vector3 newVector = spreadAngle * noAngle;
+            Debug.DrawRay(transform.position, newVector*2f, Color.black);
+            
+            //create ray
+            RaycastHit hit;
+            
+            if (Physics.Raycast(transform.position, newVector, out hit, 2f, layerMask))
+            {
+                Debug.Log("side ray"+ i +" colliding with " + hit.transform.gameObject.name);
+                
+                //check if grounded, in this case use collided bool
+                if (!_collided)
+                {
+                    //rotate to make the board face up in relation to surface
+                    RotateSelf(hit.normal, Time.deltaTime, ActGravAmt);
+                }
+            }
+        }
+
+        //change velocity and add torque accordingly
+        
         if (_brakes)
         {
             FlyingAdjustmentLerp = 0;    //reset flying adjustment
-            rb.velocity = rb.velocity * 0.95f;
             
-            rb.angularVelocity = rb.angularVelocity * 0.95f;
-
-            return;
+            rb.velocity = rb.velocity * 0.98f;
+            
+            rb.angularVelocity = rb.angularVelocity * 0.98f;
         }
         
         if (_stunned)
@@ -230,59 +354,81 @@ public class SkyboardController : MonoBehaviour
         float FlyLerpSpd = FlyingAdjustmentSpeed * FlyingAdjustmentLerp;
         Vector3 targetVelocity = transform.forward * speed;
         
-        //CHANGE THESE INTO ROTATIONS
-        //INPUT HANDLE IN A SEPARATE SCRIPT Used joe's inputs for reference
+        // this along with hand distance can be used to increase or decrease drag
+        // CURRENTLY NOT BEING USED
+        headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
         
-        // this controls pitch
+        #region Steering 
+        
+        // this sets pitch direction
         headsetZDistance = (-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
-        // this controls roll
+        // this sets roll direction
         headsetXDistance = (0f -_headset.localPosition.x); 
         
-        // this can be used to increase or decrease drag
-        // CURRENTLY NO BEING USED
-        headsetYDistance = (_headsetIniPos.y - (0f - _headset.localPosition.y));
-
-        //Change Roll
-        if (headsetXDistance < -_headsetXThresh)
-        {
-            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            rollTorque = Mathf.Lerp(0, -1, -lerpPct);
-        }
-        else if (headsetXDistance > _headsetXThresh)
-        {
-            float lerpPct = headsetXDistance / (_headsetXEndThresh - _headsetXThresh);
-            rollTorque = Mathf.Lerp(0, 1, lerpPct);
-        }
-        else
-        { 
-            rollTorque = 0f;
-        }
+        // PITCH //
+        //Calculate Pitch
         
-        //Change Pitch
-        if (headsetZDistance < -_headsetZThresh)
+        Vector3 earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
+        
+        Debug.DrawLine(transform.TransformPoint(_feetPos), 
+            transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))), // zero out the x pos
+            Color.blue);
+        
+        float heightDistance = Vector3.Distance(transform.TransformPoint(_feetPos), _earPos.position); // for matching distance (to look nice)
+        
+        Debug.DrawLine(transform.TransformPoint(new Vector3(_feetPos.x, _feetPos.y + heightDistance, _feetPos.z)), 
+            transform.TransformPoint(_feetPos),
+            Color.cyan); // Neutral up direction 0 degrees
+
+        Vector3 upDirection = transform.up;
+        Vector3 pitchTiltDirection = transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))) - transform.TransformPoint(_feetPos);
+
+        // remember this always returns positive
+        pitchHeadAngle = Vector3.Angle(upDirection, pitchTiltDirection);
+        
+        // if headset is leaning back, make the angle negative
+        if (headsetZDistance < 0)
         {
-            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            // changes the percentage value of the position of the headset within the range to match a number between a and b
-            pitchTorque = Mathf.Lerp(0, -1f, -lerpPct); 
-        }
-        else if (headsetZDistance > _headsetZThresh)
-        {
-            float lerpPct = headsetZDistance / (_headsetZEndThresh - _headsetZThresh);
-            pitchTorque = Mathf.Lerp(0, 1f, lerpPct);
-        }
-        else
-        {
-            pitchTorque = 0f; //if in deadzone just set to nothing
+            pitchHeadAngle = -pitchHeadAngle;
         }
 
-        float turnAnglePerFixedUpdate = 0.1f;
-        float torqueAmount = 3f;
+        //Apply Pitch
+        rb.AddTorque(transform.right * pitchHeadAngle  * _pitchDampeningFactor, ForceMode.Force);
+
+        // ROLL //
+        //Calculate Roll
+        
+        earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
+        
+        Debug.DrawLine(transform.TransformPoint(_feetPos), 
+            transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(1, 1, 0))), // zero out the z pos
+            Color.yellow);
+        
+        upDirection = transform.up;
+        Vector3 rollTiltDirection = transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(1, 1, 0))) - transform.TransformPoint(_feetPos);
+
+        // remember this always returns positive
+        rollHeadAngle = Vector3.Angle(upDirection, rollTiltDirection);
+        
+        // if headset is leaning (left?), make the angle negative
+        if (headsetXDistance < 0)
+        {
+            rollHeadAngle = -rollHeadAngle;
+        }
+
+        //Apply 
+        rb.AddTorque(transform.forward * rollHeadAngle  * _rollDampeningFactor, ForceMode.Force);
+        
+        
+        // YAW //
+        float turnAnglePerFixedUpdate = 0.05f;
+        float torqueAmount = 5f;
         Quaternion leftQ;
         //control turning or yaw
         if (_leftTurn)
         {
-            var rot = Quaternion.AngleAxis(-5,transform.up);
+            var rot = Quaternion.AngleAxis(-15,transform.up);
             // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
             Vector3 direction = rot * transform.forward;
             // Create a quaternion (rotation) 
@@ -296,12 +442,12 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
             
             // apply torque along that axis according to the magnitude of the angle.
-            rb.angularVelocity = (cross * angleDiff  * torqueAmount);
+            rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
         }
 
         if (_rightTurn)
         {
-            var rot = Quaternion.AngleAxis(5,transform.up);
+            var rot = Quaternion.AngleAxis(15,transform.up);
             // copied from https://www.reddit.com/r/Unity3D/comments/30vhyl/struggling_with_smoothly_rotating_a_rigidbody/
             Vector3 direction = rot * transform.forward;
             // Create a quaternion (rotation) 
@@ -315,21 +461,10 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
 		
             // apply torque along that axis according to the magnitude of the angle.
-            rb.angularVelocity = cross * angleDiff  * torqueAmount;
+            rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
         }
+        #endregion
         
-        //CHANGE PITCH AND ROLL BASED ON HEAD ANGLE TO BOTTOM OF XRRIG
-        //and then eventually to pos of feet relative
-        
-        //change Pitch
-        rb.angularVelocity += (pitchTorque * rb.transform.right * _pitchForce);
-
-        angularVelocityForLU = rb.angularVelocity;
-
-        //change Roll
-        rb.angularVelocity += (rollTorque * rb.transform.forward * _rollForce);
-        //rb.AddTorque(rollTorque * rb.transform.forward * _rollForce, ForceMode.Force);
-
         //push down more when not pressing fly
         if(_speedUp)
             ActGravAmt = Mathf.Lerp(ActGravAmt, FlyingGravityAmt, FlyingGravBuildSpeed * 4f * Time.deltaTime);
@@ -341,15 +476,8 @@ public class SkyboardController : MonoBehaviour
         //lerp velocity
         Vector3 dir = Vector3.Lerp(rb.velocity, targetVelocity, Time.deltaTime * FlyLerpSpd);
         rb.velocity = dir;
-
-        velocityforLU = rb.velocity;
     }
 
-    private void LateUpdate()
-    {
-        //rb.velocity = velocityforLU;
-        //rb.angularVelocity = angularVelocityForLU;
-    }
 
     //rotate our upwards direction
     void RotateSelf(Vector3 Direction, float d, float GravitySpd)
@@ -376,8 +504,7 @@ public class SkyboardController : MonoBehaviour
         _collided = true;
         
         if (other.gameObject.CompareTag("Ground")) return;
-        
-        
+
         float SpeedLimitBeforeCrash = 5f;
         
         if (speed > SpeedLimitBeforeCrash)
