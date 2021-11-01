@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using TMPro;
 using UnityEditor;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
 using Scene = UnityEngine.SceneManagement.Scene;
 
 public class GameManager : MonoBehaviour
@@ -20,16 +21,22 @@ public class GameManager : MonoBehaviour
     
     [Header("References")]
     public TMP_Text timeValue;
+    public TMP_Text finalLevelScore;
 
-    public SceneAsset currentLevel;
-    public SceneAsset nextLevel;
-    public SceneAsset menu;
+    // public SceneAsset currentLevel;
+    // public SceneAsset nextLevel;
+    // public SceneAsset menu;
+
+    public GameObject winWindowPrefab;
+    private GameObject winWindowInstance;
 
     public GameObject[] players;
     public float[] playerHps;
 
     private float m_Minutes;
     private float m_Seconds;
+    
+    public bool LevelOver = false;
 
 
 
@@ -59,28 +66,40 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         TimeKeeper();
-        if (levelTimeLimit <= 0 && ScoreKeeper.LevelScore <= levelScoreBronze)
+        if (levelTimeLimit <= 0 && ScoreKeeper.LevelScore <= levelScoreBronze && LevelOver == false)
+        {
             Lose();
+            LevelOver = true;
+        }
+        
 
         foreach (var playerHp in playerHps)
         {
-            if (playerHp == 0)
+            if (playerHp == 0 && LevelOver != true)
+            {
                 Lose();
+                LevelOver = true;
+            }
+            
         }
 
-        if (levelTimeLimit <= 0 && ScoreKeeper.LevelScore >= levelScoreBronze)
+        if (levelTimeLimit <= 0f && ScoreKeeper.LevelScore >= levelScoreBronze && LevelOver == false)
         {
             if (ScoreKeeper.LevelScore >= levelScoreBronze && ScoreKeeper.LevelScore < levelScoreSliver)
             {
-                Win(1);  
+                Debug.Log("Win condition 1 fulfilled");
+                Win(1);
+                LevelOver = true;
             }
             else if (ScoreKeeper.LevelScore >= levelScoreSliver && ScoreKeeper.LevelScore < levelScoreGold)
             {
                 Win(2);
+                LevelOver = true;
             }
             else if (ScoreKeeper.LevelScore >= levelScoreGold)
             {
                 Win(3);
+                LevelOver = true;
             }
         }
     }
@@ -93,8 +112,9 @@ public class GameManager : MonoBehaviour
             m_Seconds = 59f;
         }
         
-        m_Seconds -= Time.deltaTime;   // decreased remaining time by 1 second
+        m_Seconds -= Time.deltaTime;   // decreased remaining visual time by 1 second
         timeValue.text = m_Minutes.ToString("00") + ":" + Mathf.RoundToInt(m_Seconds).ToString("00");  // displays the time in minutes and seconds to the timeValue TextMeshPro referenced in the Inspector
+        levelTimeLimit -= Time.deltaTime; // decreased time limit value by 1 second
     }
 
     public void Win(int scoreTier)
@@ -102,6 +122,9 @@ public class GameManager : MonoBehaviour
         switch (scoreTier)
         {
             case 1:
+                winWindowInstance = Instantiate(winWindowPrefab);
+                finalLevelScore = winWindowInstance.GetComponent<TextMeshProUGUI>();
+                finalLevelScore.text = ScoreKeeper.LevelScore.ToString("0000");
                 break;
             case 2:
                 break;
