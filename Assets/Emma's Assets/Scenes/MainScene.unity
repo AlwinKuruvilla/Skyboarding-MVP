@@ -50453,10 +50453,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 232eea13972e7da4bb6add46037b09fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedUpInput: {fileID: 11711766586467970, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
-  _brakeInput: {fileID: -1644001223835636349, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
-  _leftTurnButton: {fileID: 2526168894431210536, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
-  _rightTurnButton: {fileID: -5684558904543120851, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
+  _speedUpInput: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _brakeInput: {fileID: 5384727332764796693, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _leftTurnButton: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _rightTurnButton: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _turnDampening: 1.5
   _headset: {fileID: 2133559426}
   _headsetZThresh: 0.1
@@ -50468,7 +50468,7 @@ MonoBehaviour:
   headsetYDistance: 0
   _leftTurn: 0
   _rightTurn: 0
-  rb: {fileID: 629407708}
+  rb: {fileID: 0}
   speed: 0
   drag: 0
   percentage: 0
@@ -55537,6 +55537,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1b8301887d292a41ab5ab8e62463415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectTarget: {fileID: 0}
+  turnSpeed: 3
+  speed: 7.68
+  range: 57.69
+  slowDownDuration: 5
+  players: []
+  enemyTag: Player
 --- !u!54 &1285126244
 Rigidbody:
   m_ObjectHideFlags: 0
