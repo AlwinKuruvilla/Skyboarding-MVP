@@ -65,34 +65,34 @@ public class SkyboardController : MonoBehaviour
         
         // Initialize ray positions
         //center rays
-        bottomRaycastTransforms[0].position = new Vector3(bottomRaycastTransforms[0].position.x,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); 
+        bottomRaycastTransforms[0].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z); 
         
-        bottomRaycastTransforms[1].position = new Vector3(bottomRaycastTransforms[0].position.x + _RayXOffset,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //front ray
+        bottomRaycastTransforms[1].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x + _RayXOffset,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z); //front ray
         
-        bottomRaycastTransforms[2].position = new Vector3(bottomRaycastTransforms[0].position.x - _RayXOffset,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //back ray
+        bottomRaycastTransforms[2].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x - _RayXOffset,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z); //back ray
 
         //left
-        bottomRaycastTransforms[3].position = new Vector3(bottomRaycastTransforms[0].position.x,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z + _RayZOffset); 
+        bottomRaycastTransforms[3].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z + _RayZOffset); 
         
-        bottomRaycastTransforms[4].position = new Vector3(bottomRaycastTransforms[3].position.x + _RayXOffset,
-            bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //front ray
+        bottomRaycastTransforms[4].position = transform.TransformPoint(bottomRaycastTransforms[3].localPosition.x + _RayXOffset,
+            bottomRaycastTransforms[3].localPosition.y, bottomRaycastTransforms[3].localPosition.z); //front ray
         
-        bottomRaycastTransforms[5].position = new Vector3(bottomRaycastTransforms[3].position.x - _RayXOffset,
-            bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //back ray
+        bottomRaycastTransforms[5].position = transform.TransformPoint(bottomRaycastTransforms[3].localPosition.x - _RayXOffset,
+            bottomRaycastTransforms[3].localPosition.y, bottomRaycastTransforms[3].localPosition.z); //back ray
         
         //right
-        bottomRaycastTransforms[6].position = new Vector3(bottomRaycastTransforms[0].position.x,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z - _RayZOffset); 
+        bottomRaycastTransforms[6].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z - _RayZOffset); 
         
-        bottomRaycastTransforms[7].position = new Vector3(bottomRaycastTransforms[6].position.x + _RayXOffset,
-            bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //front ray
+        bottomRaycastTransforms[7].position = transform.TransformPoint(bottomRaycastTransforms[6].localPosition.x + _RayXOffset,
+            bottomRaycastTransforms[6].localPosition.y, bottomRaycastTransforms[6].localPosition.z); //front ray
         
-        bottomRaycastTransforms[8].position = new Vector3(bottomRaycastTransforms[6].position.x - _RayXOffset,
-            bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //back ray
+        bottomRaycastTransforms[8].position = transform.TransformPoint(bottomRaycastTransforms[6].localPosition.x - _RayXOffset,
+            bottomRaycastTransforms[6].localPosition.y, bottomRaycastTransforms[6].localPosition.z); //back ray
         
         rb = GetComponent<Rigidbody>();
         rot = transform.eulerAngles;

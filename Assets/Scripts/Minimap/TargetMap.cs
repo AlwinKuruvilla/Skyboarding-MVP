@@ -29,7 +29,7 @@ public class TargetMap : MonoBehaviour
 
         Vector3 dirToEnemy = _enemyIndicator.transform.position - transform.position;
         
-        _enemyIndicator.transform.rotation = Quaternion.LookRotation(dirToEnemy, -transform.forward);
+        _enemyIndicator.transform.rotation = Quaternion.LookRotation(dirToEnemy, transform.up);
         
         Debug.DrawLine(_enemyIndicator.transform.position, transform.position, Color.blue);
     }
