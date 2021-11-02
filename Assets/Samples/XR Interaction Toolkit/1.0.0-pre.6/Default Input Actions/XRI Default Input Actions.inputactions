@@ -154,14 +154,6 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "Primary Button Press",
-                    "type": "Button",
-                    "id": "3fd6a33f-ffcd-46cd-af4e-611e5475f87e",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -483,17 +475,6 @@
                     "action": "Translate Anchor",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "4dee9b62-4988-421e-9ed2-b40aaca03811",
-                    "path": "<XRController>{LeftHand}/primaryButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Generic XR Controller",
-                    "action": "Primary Button Press",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -602,22 +583,6 @@
                     "type": "Value",
                     "id": "6f7cf253-7062-443b-b10f-2be48a33f027",
                     "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Joystick Press",
-                    "type": "Button",
-                    "id": "0068be3b-38de-4b2a-9e25-8043110d6524",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Primary Button Press",
-                    "type": "Button",
-                    "id": "e6902ab9-9400-43f5-84f8-65bdcf85c822",
-                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 }
@@ -930,28 +895,6 @@
                     "action": "Translate Anchor",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "b28e8a8a-a2ee-43f9-b2c6-94896dde8a6d",
-                    "path": "<XRController>{RightHand}/thumbstickClicked",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Generic XR Controller",
-                    "action": "Joystick Press",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "dd05b9ea-5bf2-4b51-ad3a-59182ade7fb1",
-                    "path": "<XRController>{RightHand}/primaryButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Generic XR Controller",
-                    "action": "Primary Button Press",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         }

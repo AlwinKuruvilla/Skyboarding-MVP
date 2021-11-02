@@ -5,14 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Win Window
+  - Ground
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - BoardControl
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 
