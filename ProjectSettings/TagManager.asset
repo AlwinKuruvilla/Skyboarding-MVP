@@ -11,10 +11,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - BoardControl
   - Water
   - UI
   - ChaseObject
+  - Player
   - 
   - 
   - 
