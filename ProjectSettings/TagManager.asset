@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Win Window
   - Ground
+  - EnemyObject
   layers:
   - Default
   - TransparentFX
@@ -13,6 +14,7 @@ TagManager:
   - BoardControl
   - Water
   - UI
+  - ChaseObject
   - Player
   - 
   - 

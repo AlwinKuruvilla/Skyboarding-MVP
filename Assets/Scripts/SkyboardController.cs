@@ -65,41 +65,41 @@ public class SkyboardController : MonoBehaviour
         
         // Initialize ray positions
         //center rays
-        bottomRaycastTransforms[0].position = new Vector3(bottomRaycastTransforms[0].position.x,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); 
+        bottomRaycastTransforms[0].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z); 
         
-        bottomRaycastTransforms[1].position = new Vector3(bottomRaycastTransforms[0].position.x + _RayXOffset,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //front ray
+        bottomRaycastTransforms[1].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x + _RayXOffset,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z); //front ray
         
-        bottomRaycastTransforms[2].position = new Vector3(bottomRaycastTransforms[0].position.x - _RayXOffset,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z); //back ray
+        bottomRaycastTransforms[2].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x - _RayXOffset,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z); //back ray
 
         //left
-        bottomRaycastTransforms[3].position = new Vector3(bottomRaycastTransforms[0].position.x,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z + _RayZOffset); 
+        bottomRaycastTransforms[3].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z + _RayZOffset); 
         
-        bottomRaycastTransforms[4].position = new Vector3(bottomRaycastTransforms[3].position.x + _RayXOffset,
-            bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //front ray
+        bottomRaycastTransforms[4].position = transform.TransformPoint(bottomRaycastTransforms[3].localPosition.x + _RayXOffset,
+            bottomRaycastTransforms[3].localPosition.y, bottomRaycastTransforms[3].localPosition.z); //front ray
         
-        bottomRaycastTransforms[5].position = new Vector3(bottomRaycastTransforms[3].position.x - _RayXOffset,
-            bottomRaycastTransforms[3].position.y, bottomRaycastTransforms[3].position.z); //back ray
+        bottomRaycastTransforms[5].position = transform.TransformPoint(bottomRaycastTransforms[3].localPosition.x - _RayXOffset,
+            bottomRaycastTransforms[3].localPosition.y, bottomRaycastTransforms[3].localPosition.z); //back ray
         
         //right
-        bottomRaycastTransforms[6].position = new Vector3(bottomRaycastTransforms[0].position.x,
-            bottomRaycastTransforms[0].position.y, bottomRaycastTransforms[0].position.z - _RayZOffset); 
+        bottomRaycastTransforms[6].position = transform.TransformPoint(bottomRaycastTransforms[0].localPosition.x,
+            bottomRaycastTransforms[0].localPosition.y, bottomRaycastTransforms[0].localPosition.z - _RayZOffset); 
         
-        bottomRaycastTransforms[7].position = new Vector3(bottomRaycastTransforms[6].position.x + _RayXOffset,
-            bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //front ray
+        bottomRaycastTransforms[7].position = transform.TransformPoint(bottomRaycastTransforms[6].localPosition.x + _RayXOffset,
+            bottomRaycastTransforms[6].localPosition.y, bottomRaycastTransforms[6].localPosition.z); //front ray
         
-        bottomRaycastTransforms[8].position = new Vector3(bottomRaycastTransforms[6].position.x - _RayXOffset,
-            bottomRaycastTransforms[6].position.y, bottomRaycastTransforms[6].position.z); //back ray
+        bottomRaycastTransforms[8].position = transform.TransformPoint(bottomRaycastTransforms[6].localPosition.x - _RayXOffset,
+            bottomRaycastTransforms[6].localPosition.y, bottomRaycastTransforms[6].localPosition.z); //back ray
         
         rb = GetComponent<Rigidbody>();
         rot = transform.eulerAngles;
         
         rb.velocity = Vector3.zero;
         
-        Invoke(nameof(InitializePositions), 2f);
+        Invoke(nameof(InitializePositions), 2f); //need these to initialize after board pos script
 
         //listen for button presses
         _brakeInput.action.started += OnBrakePressed;
@@ -216,7 +216,7 @@ public class SkyboardController : MonoBehaviour
 
                     _collided = true;
                     //slow velocity (or apply velocity in the normal's direction?)
-                    //rb.velocity *= 0.98f;
+                    rb.velocity *= 0.98f;
                 }
             }
             else
@@ -362,10 +362,10 @@ public class SkyboardController : MonoBehaviour
         #region Steering 
         
         // this sets pitch direction
-        headsetZDistance = (-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
+        headsetZDistance = (_headsetIniPos.z-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
         // this sets roll direction
-        headsetXDistance = (0f -_headset.localPosition.x); 
+        headsetXDistance = -_headsetIniPos.x-(0f -_headset.localPosition.x); 
         
         // PITCH //
         //Calculate Pitch
@@ -419,7 +419,7 @@ public class SkyboardController : MonoBehaviour
         }
 
         //Apply 
-        rb.AddTorque(transform.forward * rollHeadAngle  * _rollDampeningFactor, ForceMode.Force);
+        rb.AddTorque(-transform.forward * rollHeadAngle  * _rollDampeningFactor, ForceMode.Force);
         
         
         // YAW //
@@ -443,7 +443,7 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
             
             // apply torque along that axis according to the magnitude of the angle.
-            rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
+            rb.AddTorque(cross * angleDiff  * torqueAmount * speed/10 * 0.8f, ForceMode.Force); // .95 is for damping
         }
 
         if (_rightTurn)
@@ -462,7 +462,7 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
 		
             // apply torque along that axis according to the magnitude of the angle.
-            rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
+            rb.AddTorque(cross * angleDiff  * torqueAmount * speed/10 * 0.8f, ForceMode.Force); // .95 is for damping
         }
         #endregion
         
