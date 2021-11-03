@@ -16,9 +16,8 @@ TagManager:
   - UI
   - Player
   - ChaseObject
-  - 
-  - 
-  - 
+  - Boid
+  - Structures
   - 
   - 
   - 
