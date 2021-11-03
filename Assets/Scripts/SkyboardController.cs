@@ -117,7 +117,10 @@ public class SkyboardController : MonoBehaviour
     private void InitializePositions()
     {
         _headsetIniPos = _headset.localPosition;
+        
         _feetPos = new Vector3(0f, 0f, 0f);
+        //modify feet position based on z offset of earpos
+        _feetPos += new Vector3(_feetPos.x, _feetPos.y, _feetPos.z + _earPos.localPosition.z);
     }
 
     #region InputActionCallbacks
@@ -187,9 +190,10 @@ public class SkyboardController : MonoBehaviour
 
     [Header("Turning")] 
     public float pitchHeadAngle;
+    public float rollHeadAngle;
+    
     public float maxPitchAngle;
     public float pitchThresh;
-    public float rollHeadAngle;
     public float rollThresh;
     public float maxRollAngle;
     [SerializeField] private float _pitchDampeningFactor = 0.95f;
@@ -374,7 +378,7 @@ public class SkyboardController : MonoBehaviour
         //Calculate Pitch
         
         Vector3 earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
-        
+
         Debug.DrawLine(transform.TransformPoint(_feetPos), 
             transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))), // zero out the x pos
             Color.blue);
