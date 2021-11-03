@@ -99,7 +99,7 @@ public class SkyboardController : MonoBehaviour
         
         rb.velocity = Vector3.zero;
         
-        Invoke(nameof(InitializePositions), 2f);
+        Invoke(nameof(InitializePositions), 2f); //need these to initialize after board pos script
 
         //listen for button presses
         _brakeInput.action.started += OnBrakePressed;
@@ -216,7 +216,7 @@ public class SkyboardController : MonoBehaviour
 
                     _collided = true;
                     //slow velocity (or apply velocity in the normal's direction?)
-                    //rb.velocity *= 0.98f;
+                    rb.velocity *= 0.98f;
                 }
             }
             else
@@ -362,10 +362,10 @@ public class SkyboardController : MonoBehaviour
         #region Steering 
         
         // this sets pitch direction
-        headsetZDistance = (-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
+        headsetZDistance = (_headsetIniPos.z-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
         
         // this sets roll direction
-        headsetXDistance = (0f -_headset.localPosition.x); 
+        headsetXDistance = -_headsetIniPos.x-(0f -_headset.localPosition.x); 
         
         // PITCH //
         //Calculate Pitch
@@ -419,7 +419,7 @@ public class SkyboardController : MonoBehaviour
         }
 
         //Apply 
-        rb.AddTorque(transform.forward * rollHeadAngle  * _rollDampeningFactor, ForceMode.Force);
+        rb.AddTorque(-transform.forward * rollHeadAngle  * _rollDampeningFactor, ForceMode.Force);
         
         
         // YAW //
@@ -443,7 +443,7 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
             
             // apply torque along that axis according to the magnitude of the angle.
-            rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
+            rb.AddTorque(cross * angleDiff  * torqueAmount * speed/10 * 0.8f, ForceMode.Force); // .95 is for damping
         }
 
         if (_rightTurn)
@@ -462,7 +462,7 @@ public class SkyboardController : MonoBehaviour
             Vector3 cross = Vector3.Cross(transform.forward, direction);
 		
             // apply torque along that axis according to the magnitude of the angle.
-            rb.AddTorque(cross * angleDiff  * torqueAmount * 0.95f, ForceMode.Force); // .95 is for damping
+            rb.AddTorque(cross * angleDiff  * torqueAmount * speed/10 * 0.8f, ForceMode.Force); // .95 is for damping
         }
         #endregion
         
