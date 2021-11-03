@@ -6,15 +6,17 @@ TagManager:
   tags:
   - Win Window
   - Ground
+  - EnemyObject
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - BoardControl
   - Water
   - UI
   - Player
-  - Grab
+  - ChaseObject
+  - 
   - 
   - 
   - 
