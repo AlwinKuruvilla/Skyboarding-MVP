@@ -18,6 +18,7 @@ public class SkyboardController : MonoBehaviour
     // Make sure XRRig is zeroed out
     // lerp between these two values based on percent
     // first float determines size of "deadzone"
+    // NOT BEING USED RN // 
     [SerializeField] private float _headsetZThresh = 0.1f;
     [SerializeField] private float _headsetZEndThresh = 1.0f;
     
@@ -187,7 +188,9 @@ public class SkyboardController : MonoBehaviour
     [Header("Turning")] 
     public float pitchHeadAngle;
     public float maxPitchAngle;
+    public float pitchThresh;
     public float rollHeadAngle;
+    public float rollThresh;
     public float maxRollAngle;
     [SerializeField] private float _pitchDampeningFactor = 0.95f;
     [SerializeField] private float _rollDampeningFactor = 0.95f;
@@ -362,7 +365,7 @@ public class SkyboardController : MonoBehaviour
         #region Steering 
         
         // this sets pitch direction
-        headsetZDistance = (_headsetIniPos.z-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
+        headsetZDistance = -_headsetIniPos.z-(0f - _headset.localPosition.z); // take the initial position as the center and calculate offset
         
         // this sets roll direction
         headsetXDistance = -_headsetIniPos.x-(0f -_headset.localPosition.x); 
@@ -388,6 +391,9 @@ public class SkyboardController : MonoBehaviour
         // remember this always returns positive
         pitchHeadAngle = Vector3.Angle(upDirection, pitchTiltDirection);
         
+        // subtract the threshold amount while clamping so it doesn't go negative
+        pitchHeadAngle = Mathf.Clamp(pitchHeadAngle-pitchThresh, 0f, maxPitchAngle);
+
         // if headset is leaning back, make the angle negative
         if (headsetZDistance < 0)
         {
@@ -411,6 +417,9 @@ public class SkyboardController : MonoBehaviour
 
         // remember this always returns positive
         rollHeadAngle = Vector3.Angle(upDirection, rollTiltDirection);
+        
+        // subtract the threshold amount while clamping so it doesn't go negative
+        rollHeadAngle = Mathf.Clamp(rollHeadAngle-rollThresh, 0f, maxRollAngle);
         
         // if headset is leaning (left?), make the angle negative
         if (headsetXDistance < 0)

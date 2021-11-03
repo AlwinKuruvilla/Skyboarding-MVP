@@ -5,6 +5,7 @@ using UnityEngine;
 public class slideWithMove : MonoBehaviour
 {
 
+    [SerializeField] private Transform _mainCamera;
     public float _min;
     public float _max;
     public bool _moveWithSight;
@@ -29,11 +30,11 @@ public class slideWithMove : MonoBehaviour
             float _ratio = _normalizedValue / 360;
             if (_axis == AxisType.X)
             {
-                _axisFloat = Camera.main.transform.eulerAngles.y;
+                _axisFloat = _mainCamera.transform.eulerAngles.y;
             }
             if (_axis == AxisType.Y)
             {
-                _axisFloat = Camera.main.transform.eulerAngles.x;
+                _axisFloat = _mainCamera.transform.eulerAngles.x;
 
             }
             float _value = Mathf.Clamp(Mathf.DeltaAngle(0, _axisFloat) * _ratio, _min, _max);
