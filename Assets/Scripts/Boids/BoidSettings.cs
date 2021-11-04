@@ -19,8 +19,11 @@ public class BoidSettings : ScriptableObject {
 
     [Header ("Collisions")]
     public LayerMask obstacleMask;
+    public LayerMask player;
     public float boundsRadius = .27f;
     public float avoidCollisionWeight = 10;
     public float collisionAvoidDst = 5;
+    public float evadeWeight = 10;
+    public float evadeDst = 20;
 
 }

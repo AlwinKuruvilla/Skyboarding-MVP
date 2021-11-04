@@ -454,7 +454,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8093029802953092272, guid: 4c4e06617788f9948b903c68d100f5ae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 11.41
+      value: 21.86
       objectReference: {fileID: 0}
     - target: {fileID: 8093029802953092272, guid: 4c4e06617788f9948b903c68d100f5ae, type: 3}
       propertyPath: m_LocalPosition.z
@@ -844,7 +844,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-93928
+  m_Name: pb_Mesh-1208
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1069,6 +1069,10 @@ PrefabInstance:
     - target: {fileID: 3058006310513191713, guid: c8694b9d2dfef6d4380676520a917c67, type: 3}
       propertyPath: m_Name
       value: BoidsSpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 3058006310513191714, guid: c8694b9d2dfef6d4380676520a917c67, type: 3}
+      propertyPath: spawnCount
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3058006310513191715, guid: c8694b9d2dfef6d4380676520a917c67, type: 3}
       propertyPath: m_RootOrder

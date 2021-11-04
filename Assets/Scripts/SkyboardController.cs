@@ -122,7 +122,7 @@ public class SkyboardController : MonoBehaviour
     #region InputActionCallbacks
     private void OnBrakePressed(InputAction.CallbackContext obj)
     {
-        Debug.Log("brakes pressed");
+        //Debug.Log("brakes pressed");
         _brakes = true;
     }
 
@@ -207,7 +207,7 @@ public class SkyboardController : MonoBehaviour
 
             if (Physics.Raycast(bottomRaycastTransforms[i].position, -transform.up, out hit, 1f, layerMask))
             {
-                Debug.Log("bottom ray" + i + " colliding with " + hit.transform.gameObject.name);
+//                Debug.Log("bottom ray" + i + " colliding with " + hit.transform.gameObject.name);
                 
                 //check if grounded, in this case use collided bool
                 if (!_collided)
@@ -236,7 +236,7 @@ public class SkyboardController : MonoBehaviour
             
             if (Physics.Raycast(bottomRaycastTransforms[i].position, transform.up, out hit, 1f, layerMask))
             {
-                Debug.Log("top ray"+ i +" colliding with " + hit.transform.gameObject.name);
+                //Debug.Log("top ray"+ i +" colliding with " + hit.transform.gameObject.name);
                 
                 //check if grounded, in this case use collided bool
                 if (!_collided)
@@ -261,7 +261,7 @@ public class SkyboardController : MonoBehaviour
             
             if (Physics.Raycast(transform.position, newVector, out hit, 2f, layerMask))
             {
-                Debug.Log("side ray"+ i +" colliding with " + hit.transform.gameObject.name);
+                //Debug.Log("side ray"+ i +" colliding with " + hit.transform.gameObject.name);
                 
                 //check if grounded, in this case use collided bool
                 if (!_collided)
@@ -362,7 +362,7 @@ public class SkyboardController : MonoBehaviour
         #region Steering 
         
         // this sets pitch direction
-        headsetZDistance = (_headsetIniPos.z-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
+        headsetZDistance = -_headsetIniPos.z-(0f - _headset.localPosition.z); // take the initial position as the center and calculate offset
         
         // this sets roll direction
         headsetXDistance = -_headsetIniPos.x-(0f -_headset.localPosition.x); 
