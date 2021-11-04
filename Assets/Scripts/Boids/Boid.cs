@@ -10,6 +10,7 @@ public class Boid : MonoBehaviour {
 	[HideInInspector] public Vector3 position;
 	[HideInInspector] public Vector3 forward;
 	Vector3 velocity;
+	public bool isEvading;
 
 	// To update:
 	Vector3 acceleration;
@@ -73,12 +74,12 @@ public class Boid : MonoBehaviour {
 			acceleration += collisionAvoidForce;
 		}
 
-		// if (IsBeingChased()) {
-		//     Debug.Log("I'm being chased!");
-		//     Vector3 evadeForce = SteerTowards (Vector3.up) * settings.evadeWeight;
-		//     acceleration = evadeForce;
-		// }
-
+		if (isEvading) {
+			Vector3 evadeForce = SteerTowards(Vector3.up) * settings.evadeWeight;
+			acceleration = evadeForce;
+			isEvading = false;
+		}
+		
 		velocity += acceleration * Time.deltaTime;
 		float speed = velocity.magnitude;
 		Vector3 dir = velocity / speed;
@@ -100,22 +101,17 @@ public class Boid : MonoBehaviour {
 
 		return false;
 	}
+	
+	//Physics.OverlapSphere()
 
-	// bool IsBeingChased () {
-	//     RaycastHit hit;
-	//     if (Physics.SphereCast (position, settings.boundsRadius, forward, out hit, settings.evadeDst, settings.player)) {
-	//         return true;
-	//     }
-	//     return false;
+	// private void OnTriggerEnter(Collider other) {
+	// 	if (other.gameObject.CompareTag("Player")) {
+	// 		Debug.Log("I'm being chased!");
+	// 		Vector3 evadeForce = SteerTowards(Vector3.up) * settings.evadeWeight;
+	// 		acceleration = evadeForce;
+	// 	}
+	// 	
 	// }
-
-	private void OnTriggerEnter(Collider other) {
-		if (other.gameObject.CompareTag("Player")) {
-			Debug.Log("I'm being chased!");
-			Vector3 evadeForce = SteerTowards(Vector3.up) * settings.evadeWeight;
-			acceleration = evadeForce;
-		}
-	}
 
 	Vector3 ObstacleRays() {
 		Vector3[] rayDirections = BoidHelper.directions;
@@ -127,9 +123,10 @@ public class Boid : MonoBehaviour {
 				return dir;
 			}
 		}
-
 		return forward;
 	}
+	
+	
 
 	Vector3 SteerTowards(Vector3 vector) {
 		Vector3 v = vector.normalized * settings.maxSpeed - velocity;
