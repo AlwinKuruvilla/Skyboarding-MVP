@@ -9,6 +9,7 @@ public class SkyboardController : MonoBehaviour
 {
     [SerializeField] private InputActionReference _speedUpInput;
     [SerializeField] private InputActionReference _brakeInput;
+    [SerializeField] private InputActionReference _slowDownButton;
     [SerializeField] private InputActionReference _leftTurnButton;
     [SerializeField] private InputActionReference _rightTurnButton;
     [SerializeField] private float _turnDampening = 2f;
@@ -50,6 +51,7 @@ public class SkyboardController : MonoBehaviour
     
     //change these to enum
     private bool _brakes;
+    private bool _slow;
     private bool _stunned;
     private bool _speedUp;
     
@@ -63,6 +65,8 @@ public class SkyboardController : MonoBehaviour
     void Start()
     {
         Time.fixedDeltaTime = 1f / 72; // Prevents stutter: Set to match with headset settings
+        
+        //ignore collisions with chase objects
         
         // Initialize ray positions
         //center rays
@@ -104,16 +108,17 @@ public class SkyboardController : MonoBehaviour
 
         //listen for button presses
         _brakeInput.action.started += OnBrakePressed;
+        _slowDownButton.action.started += OnSlowPressed;
         _leftTurnButton.action.started += OnLeftTurnButton;
         _rightTurnButton.action.started += OnRightTurnButton;
         _speedUpInput.action.started += OnSpeedUp;
         
         //listen for button cancels
+        _slowDownButton.action.canceled += OnSlowCancel;
         _leftTurnButton.action.canceled += OnLeftTurnCancel;
         _rightTurnButton.action.canceled += OnRightTurnCancel;
         _speedUpInput.action.canceled += OnSpeedUpCancel;
     }
-
     private void InitializePositions()
     {
         _headsetIniPos = _headset.localPosition;
@@ -129,7 +134,17 @@ public class SkyboardController : MonoBehaviour
         Debug.Log("brakes pressed");
         _brakes = true;
     }
+    
+    private void OnSlowPressed(InputAction.CallbackContext obj)
+    {
+        _slow = true;
+    }
 
+    private void OnSlowCancel(InputAction.CallbackContext obj)
+    {
+        _slow = false;
+    }
+    
     private void OnSpeedUpCancel(InputAction.CallbackContext obj)
     {
         _speedUp = false;
@@ -340,6 +355,7 @@ public class SkyboardController : MonoBehaviour
         if (speed > FlyingSpeed) //we are over out max speed, slow down slower
             FlyAccel = FlyAccel * 0.8f;
         
+
         //handle how our speed is increased or decreased when flying
         float targetSpeed = Spd;
         
@@ -351,6 +367,17 @@ public class SkyboardController : MonoBehaviour
         {
             targetSpeed = targetSpeed - (0.5f * YAmt);
             speed -= (0.5f * YAmt) * Time.deltaTime;
+        }
+        
+        //apply slow if button is being held
+        if (_slow)
+        {
+            speed -= 4 * Time.deltaTime;
+        }
+        else
+        {
+            if (speed < FlyingMinSpeed)
+                speed += 7 * Time.deltaTime;
         }
         
         //clamp speed

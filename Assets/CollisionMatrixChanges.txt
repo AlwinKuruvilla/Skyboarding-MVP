@@ -1,0 +1,2 @@
+Changed ignore raycast not to collide with the chase objects so the board doesn't collide
+(Everything on the board is marked with ignore raycast)
