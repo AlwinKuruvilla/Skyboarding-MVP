@@ -13,7 +13,7 @@ public class rotateWithMove : MonoBehaviour
     public float _max = 360f;
     public float _min = 0f;
     public float _speed;
-    [SerializeField]private float _normalizedValue;
+    [SerializeField] private float _normalizedValue;
     [SerializeField] private Transform _trackedObjectTransform;
     private float _lerpValue;
     public bool _moveWithSight;
