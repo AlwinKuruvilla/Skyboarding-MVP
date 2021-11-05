@@ -17,8 +17,8 @@ MonoBehaviour:
   perceptionRadius: 2.5
   avoidanceRadius: 1
   maxSteerForce: 8
-  alignWeight: 2
-  cohesionWeight: 1
+  alignWeight: 0
+  cohesionWeight: 0
   seperateWeight: 2.5
   targetWeight: 2
   obstacleMask:
