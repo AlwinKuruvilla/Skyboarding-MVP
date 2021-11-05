@@ -12,6 +12,7 @@ public class slideWithMove : MonoBehaviour
     private float _normalizedValue;
     private float _axisFloat;
     [SerializeField] private float _lerpValue;
+    [SerializeField] private Transform _trackedObjectTransform;
     public AxisType _axis;
     private RectTransform _thisTransform;
     void Start()
@@ -29,11 +30,11 @@ public class slideWithMove : MonoBehaviour
             float _ratio = _normalizedValue / 360;
             if (_axis == AxisType.X)
             {
-                _axisFloat = Camera.main.transform.eulerAngles.y;
+                _axisFloat = _trackedObjectTransform.transform.eulerAngles.y;
             }
             if (_axis == AxisType.Y)
             {
-                _axisFloat = Camera.main.transform.eulerAngles.x;
+                _axisFloat = _trackedObjectTransform.transform.eulerAngles.x;
 
             }
             float _value = Mathf.Clamp(Mathf.DeltaAngle(0, _axisFloat) * _ratio, _min, _max);

@@ -14,6 +14,7 @@ public class rotateWithMove : MonoBehaviour
     public float _min = 0f;
     public float _speed;
     [SerializeField]private float _normalizedValue;
+    [SerializeField] private Transform _trackedObjectTransform;
     private float _lerpValue;
     public bool _moveWithSight;
 
@@ -34,7 +35,7 @@ public class rotateWithMove : MonoBehaviour
         {
             float _ratio = 360 / _normalizedValue;
             // float _value = Mathf.Clamp(Mathf.DeltaAngle(0, Mathf.Abs(Camera.main.transform.eulerAngles.y)) / _ratio, _min, _max);
-            float _value = Mathf.Clamp(Camera.main.transform.eulerAngles.y, _min, _max);
+            float _value = Mathf.Clamp(+_trackedObjectTransform.transform.eulerAngles.y, _min, _max);
             _lerpValue = Mathf.MoveTowards(_lerpValue, _value, _speed * Time.deltaTime);
             _thisTransform.localRotation = Quaternion.Euler(0,0,_lerpValue/_ratio);
         }
