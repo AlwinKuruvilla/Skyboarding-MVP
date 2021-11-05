@@ -26,6 +26,7 @@ public class Boid : MonoBehaviour {
 	Material material;
 	Transform cachedTransform;
 	Transform target;
+	public int pointValue;
 	
 	public enum EvasionType {
 		EvadeUp = 0,
@@ -57,15 +58,19 @@ public class Boid : MonoBehaviour {
 		switch (_evasionType) {
 			case EvasionType.EvadeUp:
 				material.color = Color.red;
+				pointValue = 500;
 				break;
 			case EvasionType.EvadeDown:
 				material.color = Color.blue;
+				pointValue = 400;
 				break;
 			case EvasionType.EvadeLeft:
 				material.color = Color.green;
+				pointValue = 300;
 				break;
 			case EvasionType.EvadeRight:
 				material.color = Color.yellow;
+				pointValue = 200; 
 				break;
 			default:
 				material.color = Color.black;
@@ -141,6 +146,11 @@ public class Boid : MonoBehaviour {
 
 	public void IsReleased() {
 		isCaptured = false;
+	}
+
+	public bool CheckCaptureStatus()
+	{
+		return isCaptured;
 	}
 
 	bool IsHeadingForCollision() {

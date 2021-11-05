@@ -5,9 +5,15 @@ using UnityEngine;
 
 public class PointArrow : MonoBehaviour
 {
-    [SerializeField] private Transform[] _enemies;
+    [SerializeField] private GameObject[] _enemies;
     
     private Transform _targetEnemyPos = null;
+
+    private void Start()
+    {
+        _enemies = GameObject.FindGameObjectsWithTag("EnemyObject");
+    }
+
     private void LateUpdate()
     {
         _targetEnemyPos = GetClosestEnemy();
@@ -17,19 +23,19 @@ public class PointArrow : MonoBehaviour
     }
     
     Transform GetClosestEnemy()
-    { ;
+    { 
         Transform bestTarget = null;
         float closestDistanceSqr = Mathf.Infinity;
         Vector3 currentPosition = transform.position;
         
-        foreach(Transform potentialTarget in _enemies)
+        foreach(GameObject potentialTarget in _enemies)
         {
-            Vector3 directionToTarget = potentialTarget.position - currentPosition;
+            Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
             float dSqrToTarget = directionToTarget.sqrMagnitude;
             if(dSqrToTarget < closestDistanceSqr)
             {
                 closestDistanceSqr = dSqrToTarget;
-                bestTarget = potentialTarget;
+                bestTarget = potentialTarget.transform;
             }
         }
         return bestTarget;
