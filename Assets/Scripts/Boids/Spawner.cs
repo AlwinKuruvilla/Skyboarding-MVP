@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour {
     public Boid prefab;
     public float spawnRadius = 10;
     public int spawnCount = 10;
-    public Color colour;
+    // public Color colour;
     public GizmoType showSpawnRegion;
 
     void Awake () {
@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour {
             boid.transform.position = pos;
             boid.transform.forward = Random.insideUnitSphere;
 
-            boid.SetColour (colour);
+            // boid.SetColour (colour);
         }
     }
 
@@ -37,7 +37,7 @@ public class Spawner : MonoBehaviour {
 
     void DrawGizmos () {
 
-        Gizmos.color = new Color (colour.r, colour.g, colour.b, 0.3f);
+        Gizmos.color = Color.magenta;
         Gizmos.DrawSphere (transform.position, spawnRadius);
     }
 
