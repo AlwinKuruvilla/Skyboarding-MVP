@@ -24,6 +24,10 @@ public class InitializeBoardPos : MonoBehaviour
     private void InitializePositions()
     {
         transform.position = new Vector3(_xrCamPos.position.x, _xrCamPos.position.y - _playerHeightOffset, _xrCamPos.position.z);
+
+        transform.rotation = _xrCamPos.rotation; // match rotation as well
+        _xRRig.rotation = _xrCamPos.rotation;
+        
         _xRRig.transform.parent = transform;
         
         _rb.constraints = RigidbodyConstraints.None;

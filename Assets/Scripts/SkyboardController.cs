@@ -9,6 +9,7 @@ public class SkyboardController : MonoBehaviour
 {
     [SerializeField] private InputActionReference _speedUpInput;
     [SerializeField] private InputActionReference _brakeInput;
+    [SerializeField] private InputActionReference _slowDownButton;
     [SerializeField] private InputActionReference _leftTurnButton;
     [SerializeField] private InputActionReference _rightTurnButton;
     [SerializeField] private float _turnDampening = 2f;
@@ -18,6 +19,7 @@ public class SkyboardController : MonoBehaviour
     // Make sure XRRig is zeroed out
     // lerp between these two values based on percent
     // first float determines size of "deadzone"
+    // NOT BEING USED RN // 
     [SerializeField] private float _headsetZThresh = 0.1f;
     [SerializeField] private float _headsetZEndThresh = 1.0f;
     
@@ -49,6 +51,7 @@ public class SkyboardController : MonoBehaviour
     
     //change these to enum
     private bool _brakes;
+    private bool _slow;
     private bool _stunned;
     private bool _speedUp;
     
@@ -62,6 +65,8 @@ public class SkyboardController : MonoBehaviour
     void Start()
     {
         Time.fixedDeltaTime = 1f / 72; // Prevents stutter: Set to match with headset settings
+        
+        //ignore collisions with chase objects
         
         // Initialize ray positions
         //center rays
@@ -103,20 +108,24 @@ public class SkyboardController : MonoBehaviour
 
         //listen for button presses
         _brakeInput.action.started += OnBrakePressed;
+        _slowDownButton.action.started += OnSlowPressed;
         _leftTurnButton.action.started += OnLeftTurnButton;
         _rightTurnButton.action.started += OnRightTurnButton;
         _speedUpInput.action.started += OnSpeedUp;
         
         //listen for button cancels
+        _slowDownButton.action.canceled += OnSlowCancel;
         _leftTurnButton.action.canceled += OnLeftTurnCancel;
         _rightTurnButton.action.canceled += OnRightTurnCancel;
         _speedUpInput.action.canceled += OnSpeedUpCancel;
     }
-
     private void InitializePositions()
     {
         _headsetIniPos = _headset.localPosition;
+        
         _feetPos = new Vector3(0f, 0f, 0f);
+        //modify feet position based on z offset of earpos
+        _feetPos += new Vector3(_feetPos.x, _feetPos.y, _feetPos.z + _earPos.localPosition.z);
     }
 
     #region InputActionCallbacks
@@ -125,7 +134,17 @@ public class SkyboardController : MonoBehaviour
         Debug.Log("brakes pressed");
         _brakes = true;
     }
+    
+    private void OnSlowPressed(InputAction.CallbackContext obj)
+    {
+        _slow = true;
+    }
 
+    private void OnSlowCancel(InputAction.CallbackContext obj)
+    {
+        _slow = false;
+    }
+    
     private void OnSpeedUpCancel(InputAction.CallbackContext obj)
     {
         _speedUp = false;
@@ -186,8 +205,11 @@ public class SkyboardController : MonoBehaviour
 
     [Header("Turning")] 
     public float pitchHeadAngle;
-    public float maxPitchAngle;
     public float rollHeadAngle;
+    
+    public float maxPitchAngle;
+    public float pitchThresh;
+    public float rollThresh;
     public float maxRollAngle;
     [SerializeField] private float _pitchDampeningFactor = 0.95f;
     [SerializeField] private float _rollDampeningFactor = 0.95f;
@@ -333,6 +355,7 @@ public class SkyboardController : MonoBehaviour
         if (speed > FlyingSpeed) //we are over out max speed, slow down slower
             FlyAccel = FlyAccel * 0.8f;
         
+
         //handle how our speed is increased or decreased when flying
         float targetSpeed = Spd;
         
@@ -344,6 +367,17 @@ public class SkyboardController : MonoBehaviour
         {
             targetSpeed = targetSpeed - (0.5f * YAmt);
             speed -= (0.5f * YAmt) * Time.deltaTime;
+        }
+        
+        //apply slow if button is being held
+        if (_slow)
+        {
+            speed -= 4 * Time.deltaTime;
+        }
+        else
+        {
+            if (speed < FlyingMinSpeed)
+                speed += 7 * Time.deltaTime;
         }
         
         //clamp speed
@@ -362,7 +396,7 @@ public class SkyboardController : MonoBehaviour
         #region Steering 
         
         // this sets pitch direction
-        headsetZDistance = (_headsetIniPos.z-(0f - _headset.localPosition.z)); // take the initial position as the center and calculate offset
+        headsetZDistance = -_headsetIniPos.z-(0f - _headset.localPosition.z); // take the initial position as the center and calculate offset
         
         // this sets roll direction
         headsetXDistance = -_headsetIniPos.x-(0f -_headset.localPosition.x); 
@@ -371,7 +405,7 @@ public class SkyboardController : MonoBehaviour
         //Calculate Pitch
         
         Vector3 earPosRelativeToBoard = transform.InverseTransformPoint(_earPos.position); // convert ear position to board local position
-        
+
         Debug.DrawLine(transform.TransformPoint(_feetPos), 
             transform.TransformPoint(Vector3.Scale(earPosRelativeToBoard, new Vector3(0, 1, 1))), // zero out the x pos
             Color.blue);
@@ -388,6 +422,9 @@ public class SkyboardController : MonoBehaviour
         // remember this always returns positive
         pitchHeadAngle = Vector3.Angle(upDirection, pitchTiltDirection);
         
+        // subtract the threshold amount while clamping so it doesn't go negative
+        pitchHeadAngle = Mathf.Clamp(pitchHeadAngle-pitchThresh, 0f, maxPitchAngle);
+
         // if headset is leaning back, make the angle negative
         if (headsetZDistance < 0)
         {
@@ -411,6 +448,9 @@ public class SkyboardController : MonoBehaviour
 
         // remember this always returns positive
         rollHeadAngle = Vector3.Angle(upDirection, rollTiltDirection);
+        
+        // subtract the threshold amount while clamping so it doesn't go negative
+        rollHeadAngle = Mathf.Clamp(rollHeadAngle-rollThresh, 0f, maxRollAngle);
         
         // if headset is leaning (left?), make the angle negative
         if (headsetXDistance < 0)

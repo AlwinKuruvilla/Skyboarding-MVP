@@ -14,11 +14,10 @@ TagManager:
   - BoardControl
   - Water
   - UI
-  - ChaseObject
   - Player
-  - 
-  - 
-  - 
+  - ChaseObject
+  - Boid
+  - Structures
   - 
   - 
   - 
