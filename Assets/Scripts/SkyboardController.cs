@@ -61,12 +61,17 @@ public class SkyboardController : MonoBehaviour
     [SerializeField] private float _RayZOffset = 0.5f;
     [SerializeField] private float _angleDegree = 15; //for side rays
 
+    private int _layerMask;
+    
     // Start is called before the first frame update
     void Start()
     {
         Time.fixedDeltaTime = 1f / 72; // Prevents stutter: Set to match with headset settings
         
         //ignore collisions with chase objects
+        // NOTE: can change layermask to bitwise operator later to only collide with game level 
+        _layerMask = ~( (1 << LayerMask.NameToLayer ("Ignore Raycast")) | 
+                           (1 << LayerMask.NameToLayer ("Boid"))); //ignore raycast AND boids
         
         // Initialize ray positions
         //center rays
@@ -213,12 +218,11 @@ public class SkyboardController : MonoBehaviour
     public float maxRollAngle;
     [SerializeField] private float _pitchDampeningFactor = 0.95f;
     [SerializeField] private float _rollDampeningFactor = 0.95f;
-    
+
     private void FixedUpdate()
     {
         // Create raycast bomb here 
-        // NOTE: can change layermask to bitwise operator later to only collide with game level 
-        int layerMask =~ LayerMask.GetMask("Ignore Raycast");
+        
         //bottom of board raycasts
         for (int i = 0; i < bottomRaycastTransforms.Count; i++)
         {
@@ -227,9 +231,11 @@ public class SkyboardController : MonoBehaviour
             //create ray
             RaycastHit hit;
 
-            if (Physics.Raycast(bottomRaycastTransforms[i].position, -transform.up, out hit, 1f, layerMask))
+            if (Physics.Raycast(bottomRaycastTransforms[i].position, -transform.up, out hit, 1f, _layerMask))
             {
-//                Debug.Log("bottom ray" + i + " colliding with " + hit.transform.gameObject.name);
+                if (hit.collider.isTrigger) return;
+                
+                Debug.Log("bottom ray" + i + " colliding with " + hit.transform.gameObject.name);
                 
                 //check if grounded, in this case use collided bool
                 if (!_collided)
@@ -256,9 +262,11 @@ public class SkyboardController : MonoBehaviour
             //create ray
             RaycastHit hit;
             
-            if (Physics.Raycast(bottomRaycastTransforms[i].position, transform.up, out hit, 1f, layerMask))
+            if (Physics.Raycast(bottomRaycastTransforms[i].position, transform.up, out hit, 1f, _layerMask))
             {
-                //Debug.Log("top ray"+ i +" colliding with " + hit.transform.gameObject.name);
+                if (hit.collider.isTrigger) return;
+                
+                Debug.Log("top ray"+ i +" colliding with " + hit.transform.gameObject.name);
                 
                 //check if grounded, in this case use collided bool
                 if (!_collided)
@@ -281,9 +289,11 @@ public class SkyboardController : MonoBehaviour
             //create ray
             RaycastHit hit;
             
-            if (Physics.Raycast(transform.position, newVector, out hit, 2f, layerMask))
+            if (Physics.Raycast(transform.position, newVector, out hit, 2f, _layerMask))
             {
-                //Debug.Log("side ray"+ i +" colliding with " + hit.transform.gameObject.name);
+                if (hit.collider.isTrigger) return;
+                
+                Debug.Log("side ray"+ i +" colliding with " + hit.transform.gameObject.name);
                 
                 //check if grounded, in this case use collided bool
                 if (!_collided)
