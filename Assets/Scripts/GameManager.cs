@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using TMPro;
 using UnityEditor;
+#if UNITY_EDITOR
 using UnityEditor.SearchService;
+#endif
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using Scene = UnityEngine.SceneManagement.Scene;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -24,10 +27,12 @@ public class GameManager : MonoBehaviour
     public TMP_Text timeValue;
     public TMP_Text finalLevelScore;
 
+#if UNITY_EDITOR
     public SceneAsset currentLevel;
     public SceneAsset nextLevel;
     public SceneAsset menu;
-
+#endif
+    
     public GameObject winWindowPrefab;
     private GameObject winWindowInstance;
 
