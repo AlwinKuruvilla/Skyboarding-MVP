@@ -22,9 +22,10 @@ public class Boid : MonoBehaviour {
 	[HideInInspector] public int numPerceivedFlockmates;
 
 	// Cached
-	Material _material;
-	Transform _cachedTransform;
-	Transform _target;
+	Material material;
+	Transform cachedTransform;
+	Transform target;
+	public int pointValue;
 	
 	public enum EvasionType {
 		EvadeUp = 0,
@@ -55,19 +56,23 @@ public class Boid : MonoBehaviour {
 	// public void SetColour() {
 	// 	switch (_evasionType) {
 	// 		case EvasionType.EvadeUp:
-	// 			_material.color = Color.red;
+	// 			material.color = Color.red;
+	// 			pointValue = 500;
 	// 			break;
 	// 		case EvasionType.EvadeDown:
-	// 			_material.color = Color.blue;
+	// 			material.color = Color.blue;
+	// 			pointValue = 400;
 	// 			break;
 	// 		case EvasionType.EvadeLeft:
-	// 			_material.color = Color.green;
+	// 			material.color = Color.green;
+	// 			pointValue = 300;
 	// 			break;
 	// 		case EvasionType.EvadeRight:
-	// 			_material.color = Color.yellow;
+	// 			material.color = Color.yellow;
+	// 			pointValue = 200; 
 	// 			break;
 	// 		default:
-	// 			_material.color = Color.black;
+	// 			material.color = Color.black;
 	// 			break;
 	// 	}
 	// }
@@ -140,6 +145,11 @@ public class Boid : MonoBehaviour {
 
 	public void IsReleased() {
 		_isCaptured = false;
+	}
+
+	public bool CheckCaptureStatus()
+	{
+		return isCaptured;
 	}
 
 	bool IsHeadingForCollision() {

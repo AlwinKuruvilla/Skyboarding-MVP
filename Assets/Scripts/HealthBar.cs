@@ -8,6 +8,7 @@ using UnityEngine;
 public class HealthBar : MonoBehaviour
 {
     public Slider healthSlider;
+    public int maxHealth;
 
     private void Start()
     {
@@ -16,6 +17,8 @@ public class HealthBar : MonoBehaviour
         {
             Debug.LogError("health bar slider not defined on HealthBar.cs");
         }
+
+        SetMaxHealth(maxHealth);
     }
 
     public void SetMaxHealth (int health) // sets max slider value of health bar

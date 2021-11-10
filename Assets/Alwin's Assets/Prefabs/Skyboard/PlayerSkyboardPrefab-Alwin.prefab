@@ -11405,8 +11405,10 @@ MonoBehaviour:
   FlyingGravBuildSpeed: 0.2
   StunnedTime: 0
   pitchHeadAngle: 0
-  maxPitchAngle: 0
   rollHeadAngle: 0
+  maxPitchAngle: 0
+  pitchThresh: 0
+  rollThresh: 0
   maxRollAngle: 0
   _pitchDampeningFactor: 0.95
   _rollDampeningFactor: 0.5
