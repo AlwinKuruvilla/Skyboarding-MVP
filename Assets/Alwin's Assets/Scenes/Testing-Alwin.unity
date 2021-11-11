@@ -38222,6 +38222,63 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608109922}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1616298799
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.77
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
+      propertyPath: m_Name
+      value: Skyboard
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c4e0e052ac74ad947844658ca4770ead, type: 3}
 --- !u!43 &1634967956
 Mesh:
   m_ObjectHideFlags: 0
@@ -42369,15 +42426,21 @@ MonoBehaviour:
   levelScoreBronze: 500
   levelScoreSliver: 1000
   levelScoreGold: 1500
+  winWindowPrefab: {fileID: 0}
   timeValue: {fileID: 0}
-  finalLevelScore: {fileID: 0}
   currentLevel: {fileID: 0}
   nextLevel: {fileID: 0}
   menu: {fileID: 0}
-  winWindowPrefab: {fileID: 0}
+  bronzeTierHUDSpriteRef: {fileID: 0}
+  sliverTierHUDSpriteRef: {fileID: 0}
+  goldTierHUDSpriteRef: {fileID: 0}
+  bronzeTierMessage: {fileID: 0}
+  sliverTierMessage: {fileID: 0}
+  goldTierMessage: {fileID: 0}
+  loseMessage: {fileID: 0}
   players: []
   playerHps: []
-  LevelOver: 0
+  levelOver: 0
 --- !u!4 &1770494509
 Transform:
   m_ObjectHideFlags: 0
@@ -46264,6 +46327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec79e4425db7eed4bbc5d7279bbcc82e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tempWindowPrefab: {fileID: 0}
 --- !u!4 &1909354733 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2775363296921339779, guid: 0df27bf65fb581d4285010fe4b8f24cb, type: 3}

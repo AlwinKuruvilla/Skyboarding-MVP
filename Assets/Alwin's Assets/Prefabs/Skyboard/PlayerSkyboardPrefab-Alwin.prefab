@@ -11362,6 +11362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speedUpInput: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _brakeInput: {fileID: -5982496924579745919, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _slowDownButton: {fileID: 0}
   _leftTurnButton: {fileID: -4084014799535200556, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _rightTurnButton: {fileID: -8270564778575511633, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   _turnDampening: 1.5
