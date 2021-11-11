@@ -20,17 +20,37 @@ namespace Boids {
 		[HideInInspector] public int numPerceivedFlockmates;
 
 		[HideInInspector] public int pointValue;
+		[HideInInspector] public Material _material;
+
+		[Header("Evade Type Up")] 
+		public Color evadeTypeUpColorA;
+		public Color evadeTypeUpColorB;
+		public Color evadeTypeUpColorBase;
 		public int evadeTypeUpPointValue = 200;
+		
+		[Header("Evade Type Down")]
+		public Color evadeTypeDownColorA;
+		public Color evadeTypeDownColorB;
+		public Color evadeTypeDownColorBase;
 		public int evadeTypeDownPointValue = 400;
+		
+		[Header("Evade Type Left")]
+		public Color evadeTypeLeftColorA;
+		public Color evadeTypeLeftColorB;
+		public Color evadeTypeLeftColorBase;
 		public int evadeTypeLeftPointValue = 600;
+		
+		[Header("Evade Type Right")]
+		public Color evadeTypeRightColorA;
+		public Color evadeTypeRightColorB;
+		public Color evadeTypeRightColorBase;
 		public int evadeTypeRightPointValue = 700;
 
 		// Cached
-		Material _material;
 		Transform _cachedTransform;
 		Transform _target;
-		
-	
+
+
 		public enum EvasionType {
 			EvadeUp = 0,
 			EvadeDown = 1,
@@ -39,8 +59,8 @@ namespace Boids {
 		}
 
 		void Awake() {
-			//_material = transform.GetComponentInChildren<MeshRenderer>().material;
 			_cachedTransform = transform;
+			_material = GetComponentInChildren<SkinnedMeshRenderer>().material;
 		}
 
 		public void Initialize(BoidSettings settings, Transform target) {
@@ -54,28 +74,33 @@ namespace Boids {
 			_velocity = transform.forward * startSpeed;
 
 			_evasionType = (EvasionType)Random.Range(0, 4);
-			//SetColour();
+			SetColour();
 		}
 
-		// public void SetColour() {
-		// 	switch (_evasionType) {
-		// 		case EvasionType.EvadeUp:
-		// 			material.color = Color.red;
-		// 			break;
-		// 		case EvasionType.EvadeDown:
-		// 			material.color = Color.blue;
-		// 			break;
-		// 		case EvasionType.EvadeLeft:
-		// 			material.color = Color.green;
-		// 			break;
-		// 		case EvasionType.EvadeRight:
-		// 			material.color = Color.yellow;
-		// 			break;
-		// 		default:
-		// 			material.color = Color.black;
-		// 			break;
-		// 	}
-		// }
+		public void SetColour() {
+			switch (_evasionType) {
+				case EvasionType.EvadeUp:
+					_material.SetColor("ColorA", evadeTypeUpColorA);
+					_material.SetColor("ColorB", evadeTypeUpColorB);
+					_material.SetColor("BaseColor", evadeTypeUpColorBase);
+					break;
+				case EvasionType.EvadeDown:
+					_material.SetColor("ColorA", evadeTypeDownColorA);
+					_material.SetColor("ColorB", evadeTypeDownColorB);
+					_material.SetColor("BaseColor", evadeTypeDownColorBase);
+					break;
+				case EvasionType.EvadeLeft:
+					_material.SetColor("ColorA", evadeTypeLeftColorA);
+					_material.SetColor("ColorB", evadeTypeLeftColorB);
+					_material.SetColor("BaseColor", evadeTypeLeftColorBase);
+					break;
+				case EvasionType.EvadeRight:
+					_material.SetColor("ColorA", evadeTypeRightColorA);
+					_material.SetColor("ColorB", evadeTypeRightColorB);
+					_material.SetColor("BaseColor", evadeTypeRightColorBase);
+					break;
+			}
+		}
 
 		public void UpdateBoid() {
 			Vector3 acceleration = Vector3.zero;
