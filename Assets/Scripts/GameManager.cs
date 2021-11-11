@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using TMPro;
 using UnityEditor;
+#if UNITY_EDITOR
 using UnityEditor.SearchService;
+#endif
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using Scene = UnityEngine.SceneManagement.Scene;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +23,14 @@ public class GameManager : MonoBehaviour
 
     private int _storedScoreTier;
 
+#if UNITY_EDITOR
+    public SceneAsset currentLevel;
+    public SceneAsset nextLevel;
+    public SceneAsset menu;
+#endif
+    
+    public GameObject winWindowPrefab;
+    private GameObject winWindowInstance;
     // flags used for determining which tier indicators are visible in the HUD
     private bool m_BrozneTierIndicatorOn = false;
     private bool m_SliverTierIndicatorOn = false;
@@ -52,7 +63,6 @@ public class GameManager : MonoBehaviour
     
     private GameObject m_WinMessageInstance;
     private GameObject m_LoseMessageInstance;// variable for win message instanced object
-
     public GameObject[] players;
     public float[] playerHps;
 

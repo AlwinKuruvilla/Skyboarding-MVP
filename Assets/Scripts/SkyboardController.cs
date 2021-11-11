@@ -223,6 +223,7 @@ public class SkyboardController : MonoBehaviour
     {
         // Create raycast bomb here 
         
+        int j = 0;
         //bottom of board raycasts
         for (int i = 0; i < bottomRaycastTransforms.Count; i++)
         {
@@ -249,8 +250,13 @@ public class SkyboardController : MonoBehaviour
             }
             else
             {
-                rb.useGravity = false;
+                j ++;
+            }
+
+            if (j == bottomRaycastTransforms.Count)
+            {
                 _collided = false;
+                rb.useGravity = false;
             }
         }
         
@@ -261,7 +267,7 @@ public class SkyboardController : MonoBehaviour
             
             //create ray
             RaycastHit hit;
-            
+
             if (Physics.Raycast(bottomRaycastTransforms[i].position, transform.up, out hit, 1f, _layerMask))
             {
                 if (hit.collider.isTrigger) return;
@@ -577,7 +583,7 @@ public class SkyboardController : MonoBehaviour
 
     private void OnCollisionExit(Collision other)
     {
-        if (_collided) _collided = false;
+        //if (_collided) _collided = false;
         
         ActGravAmt = FlyingGravityAmt; //our gravity is returned to the flying amount
     }
