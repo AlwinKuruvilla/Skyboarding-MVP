@@ -46,10 +46,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5201097946833671074}
   - component: {fileID: 5201097946843462722}
-  - component: {fileID: 734709646990324693}
-  - component: {fileID: 2623082236158672521}
+  - component: {fileID: -8961222709065168728}
+  - component: {fileID: 3223387283201150520}
   m_Layer: 0
-  m_Name: Condor
+  m_Name: Condor 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,7 +90,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &734709646990324693
+--- !u!114 &-8961222709065168728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,7 +127,7 @@ MonoBehaviour:
   evadeTypeRightColorB: {r: 0.6037736, g: 0.56578964, b: 0.12815951, a: 0}
   evadeTypeRightColorBase: {r: 0.29934448, g: 0.3018868, b: 0.03844785, a: 0}
   evadeTypeRightPointValue: 700
---- !u!54 &2623082236158672521
+--- !u!54 &3223387283201150520
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

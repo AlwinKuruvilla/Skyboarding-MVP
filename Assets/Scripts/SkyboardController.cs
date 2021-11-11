@@ -241,7 +241,7 @@ public class SkyboardController : MonoBehaviour
                 //check if grounded, in this case use collided bool
                 if (!_collided)
                 {
-                    rb.useGravity = true;
+                    //rb.useGravity = true;
 
                     _collided = true;
                     //slow velocity (or apply velocity in the normal's direction?)
