@@ -29,13 +29,14 @@ public class GoalTrigger : MonoBehaviour
             Destroy(other.gameObject); // destroy the MovingChaseObject that entered the trigger
         }
 
-        // TEMPORARY STATEMENT FOR TESTING/DEMO
+        /* TEMPORARY STATEMENT FOR TESTING/DEMO
             if (ScoreKeeper.LevelScore >= 200)
             {
                 Debug.LogWarning("WARNING: using testing statement for win condition in GameManger.cs");
                 Instantiate(tempWindowPrefab);
                 Time.timeScale = 0;
             }
+        */
     }
     
 }

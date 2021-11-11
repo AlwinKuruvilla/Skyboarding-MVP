@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 753919347161955319}
   - component: {fileID: 8381201904411115108}
   - component: {fileID: 2987672820324804344}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 637459083101706327}
   - component: {fileID: 2764159753748104837}
   - component: {fileID: 6634969633784266728}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: FinalScore_value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 4778094903162427864}
   - component: {fileID: 2556557300967851474}
   - component: {fileID: 7547804851058017388}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MinimumScore_boarder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,7 +339,7 @@ GameObject:
   - component: {fileID: 6541522842102140679}
   - component: {fileID: 6982029720427754661}
   - component: {fileID: 2700409204415683643}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Retry_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,7 +483,7 @@ GameObject:
   - component: {fileID: 3187774764677196359}
   - component: {fileID: 3087900787833342838}
   - component: {fileID: 5861818218918889945}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +562,7 @@ GameObject:
   - component: {fileID: 7525313214098219938}
   - component: {fileID: 1926696308008493089}
   - component: {fileID: 1646536747736428728}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: FinalScore_title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -696,7 +696,7 @@ GameObject:
   - component: {fileID: 1589785418099446868}
   - component: {fileID: 6823998703781110940}
   - component: {fileID: 7562754852269031238}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: MinimumScore_value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -831,7 +831,7 @@ GameObject:
   - component: {fileID: 7005382049952371553}
   - component: {fileID: 7615855002592989620}
   - component: {fileID: 8380180831872496921}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Menu_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -951,7 +951,7 @@ GameObject:
   - component: {fileID: 231623835724468282}
   - component: {fileID: 1860175763300467782}
   - component: {fileID: 8356160685018663578}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: MinimumScore_title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1085,7 +1085,7 @@ GameObject:
   - component: {fileID: 7023203132580562707}
   - component: {fileID: 1626986857419245524}
   - component: {fileID: 6983149727331084860}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Heading
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1219,7 +1219,7 @@ GameObject:
   - component: {fileID: 7684398385449899726}
   - component: {fileID: 7684398385449899724}
   - component: {fileID: 7684398385449899725}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1294,7 +1294,7 @@ GameObject:
   - component: {fileID: 7684398385548609307}
   - component: {fileID: 7684398385548609305}
   - component: {fileID: 7684398385548609306}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: hudSprite-5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1378,7 +1378,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7684398385548609308}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84ffcea5d370435418e06a8bf45a28d3, type: 3}
   m_Name: 
@@ -1400,7 +1400,9 @@ GameObject:
   - component: {fileID: 7684398385601765086}
   - component: {fileID: 7684398385601765087}
   - component: {fileID: 7684398385601765072}
-  m_Layer: 5
+  - component: {fileID: 8598564023699595408}
+  - component: {fileID: 1310729051090006423}
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1488,6 +1490,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7684398385601765074}
   m_CullTransparentMesh: 1
+--- !u!114 &8598564023699595408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7684398385601765074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &1310729051090006423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7684398385601765074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &7684398385728413081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1499,7 +1537,7 @@ GameObject:
   - component: {fileID: 7684398385728413080}
   - component: {fileID: 7684398385728413063}
   - component: {fileID: 7684398385728413062}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: LoseMessagePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

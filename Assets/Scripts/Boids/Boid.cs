@@ -19,11 +19,17 @@ namespace Boids {
 		[HideInInspector] public Vector3 centreOfFlockmates;
 		[HideInInspector] public int numPerceivedFlockmates;
 
+		[HideInInspector] public int pointValue;
+		public int evadeTypeUpPointValue = 200;
+		public int evadeTypeDownPointValue = 400;
+		public int evadeTypeLeftPointValue = 600;
+		public int evadeTypeRightPointValue = 700;
+
 		// Cached
 		Material _material;
 		Transform _cachedTransform;
 		Transform _target;
-		public int pointValue;
+		
 	
 		public enum EvasionType {
 			EvadeUp = 0,
@@ -55,19 +61,15 @@ namespace Boids {
 		// 	switch (_evasionType) {
 		// 		case EvasionType.EvadeUp:
 		// 			material.color = Color.red;
-		// 			pointValue = 500;
 		// 			break;
 		// 		case EvasionType.EvadeDown:
 		// 			material.color = Color.blue;
-		// 			pointValue = 400;
 		// 			break;
 		// 		case EvasionType.EvadeLeft:
 		// 			material.color = Color.green;
-		// 			pointValue = 300;
 		// 			break;
 		// 		case EvasionType.EvadeRight:
 		// 			material.color = Color.yellow;
-		// 			pointValue = 200; 
 		// 			break;
 		// 		default:
 		// 			material.color = Color.black;
@@ -125,12 +127,16 @@ namespace Boids {
 		private Vector3 EvasionDir() {
 			switch (_evasionType) {
 				case EvasionType.EvadeUp:
+					pointValue = evadeTypeUpPointValue;
 					return Vector3.up;
 				case EvasionType.EvadeDown:
+					pointValue = evadeTypeDownPointValue;
 					return Vector3.down;
 				case EvasionType.EvadeLeft:
+					pointValue = evadeTypeLeftPointValue;
 					return Vector3.left;
 				case EvasionType.EvadeRight:
+					pointValue = evadeTypeRightPointValue;
 					return Vector3.right;
 				default:
 					return Vector3.back;
