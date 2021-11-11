@@ -237,8 +237,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4778094903162427864}
   - component: {fileID: 2556557300967851474}
+  - component: {fileID: 7547804851058017388}
   m_Layer: 0
-  m_Name: TierAchieved_value
+  m_Name: TierAchieved_boarder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -251,7 +252,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909789909460342065}
-  m_LocalRotation: {x: -0.0009651011, y: -0.0005140061, z: -0.009965156, w: 0.99994975}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.1081, y: 0.011, z: 0}
   m_LocalScale: {x: 0.005860293, y: 0.005860293, z: 0.005860293}
   m_Children: []
@@ -277,7 +278,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -309,6 +310,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7547804851058017388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909789909460342065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a6005bac8864b7479295e3b780078aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisRotationSpeed: 0
+  yAxisRotationSpeed: 5
+  zAxisRotationSpeed: 0
+  objectToRotateRef: {fileID: 1909789909460342065}
 --- !u!1 &1973687439817024522
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,7 +793,7 @@ GameObject:
   - component: {fileID: 6823998703781110940}
   - component: {fileID: 7562754852269031238}
   m_Layer: 5
-  m_Name: FinalScore_value (1)
+  m_Name: TierAchieved_value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
