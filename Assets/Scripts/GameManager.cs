@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     private int _storedScoreTier;
   
-    public GameObject winWindowPrefab;
+    //public GameObject winWindowPrefab; // used for testing purposes
     private GameObject winWindowInstance;
     // flags used for determining which tier indicators are visible in the HUD
     private bool m_BrozneTierIndicatorOn = false;
@@ -76,9 +76,9 @@ public class GameManager : MonoBehaviour
         if (players == null)
         {
             int x = 0; // index variable for arrays
-            players = GameObject.FindGameObjectsWithTag("Player");
+            players = GameObject.FindGameObjectsWithTag("Player"); // find all gameobjects with "Player" tag and put them in the players array
             
-            foreach (var player in players)
+            foreach (var player in players) // get the health bar for each player and put them in the playerHps array (health bar gameobject will need "Player" tag to be found by the line above)
             {
                 playerHps[x] = players[x].GetComponent<HealthBar>().healthSlider.value;
                 Debug.Log("Player " + (x+1) + " found. Player " + (x+1) + " HP logged as " + playerHps[x]);
@@ -93,22 +93,25 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        int x = players.Length; // index number
+        
         TimeKeeper();
         
-        if (levelTimeLimit <= 0 && ScoreKeeper.LevelScore <= levelScoreBronze && levelOver != true)
+        if (levelTimeLimit <= 0 && (ScoreKeeper.LevelScore + players[0].GetComponent<HealthBar>().healthSlider.value) <= levelScoreBronze && levelOver == false) // only adds first player's remaining HP to score currently
         {
             levelOver = true;
             Lose(levelScoreBronze);
         }
         
-
         foreach (var playerHp in playerHps)
         {
+            playerHps[x] = players[x].GetComponent<HealthBar>().healthSlider.value;
             if (playerHp == 0 && levelOver == false)
             {
                 levelOver = true;
                 Lose(levelScoreBronze);
             }
+            x--;
         }
 
         if (m_AllTierIndicatorsOn == false) CheckTierHUDIndicators();
@@ -127,6 +130,7 @@ public class GameManager : MonoBehaviour
         m_Seconds -= Time.deltaTime;   // decreased remaining visual time by 1 second
         timeValue.text = m_Minutes.ToString("00") + ":" + Mathf.RoundToInt(m_Seconds).ToString("00");  // displays the time in minutes and seconds to the timeValue TextMeshPro referenced in the Inspector
         levelTimeLimit -= Time.deltaTime; // decreased time limit value by 1 second
+        if (levelTimeLimit <= 0) levelTimeLimit = 0;
     }
 
     public void Win(int scoreTier)
@@ -170,7 +174,7 @@ public class GameManager : MonoBehaviour
             m_BrozneTierIndicatorOn = true;
         }
         
-        if (ScoreKeeper.LevelScore >= levelScoreSliver && !m_SliverTierIndicatorOn == false)
+        if (ScoreKeeper.LevelScore >= levelScoreSliver && m_SliverTierIndicatorOn == false)
         {
             Debug.Log("Sliver tier achieved");
             sliverTierHUDSpriteRef.transform.localScale = Vector3.one;
