@@ -22,13 +22,7 @@ public class GameManager : MonoBehaviour
     public int levelScoreGold;
 
     private int _storedScoreTier;
-
-#if UNITY_EDITOR
-    public SceneAsset currentLevel;
-    public SceneAsset nextLevel;
-    public SceneAsset menu;
-#endif
-    
+  
     public GameObject winWindowPrefab;
     private GameObject winWindowInstance;
     // flags used for determining which tier indicators are visible in the HUD

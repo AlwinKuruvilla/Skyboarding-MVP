@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Boids;
 using UnityEngine;
 
 public class BoidManager : MonoBehaviour {
