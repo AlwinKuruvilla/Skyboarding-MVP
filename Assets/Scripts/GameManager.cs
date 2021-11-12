@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [Header("Level Variables")] public float levelTimeLimit = 120f; // set default time time for the level to 2 minutes
 
     public int levelScoreBronze;
+    public static int StaticBronzeScore;
     public int levelScoreSliver;
     public int levelScoreGold;
 
@@ -38,9 +39,9 @@ public class GameManager : MonoBehaviour
     [NonSerialized] public TMP_Text minimumLevelScore;
     
     [Tooltip("reference variables for scene assets")]
-    public SceneAsset currentLevel;
-    public SceneAsset nextLevel;
-    public SceneAsset menu;
+    public static SceneAsset CurrentLevel;
+    public static SceneAsset NextLevel;
+    public static SceneAsset Menu;
     
     [Header("HUD Tier Indicator References")]
     [Tooltip("reference variables for tier indicators in the HUD; set in the Inspector")]
@@ -63,13 +64,17 @@ public class GameManager : MonoBehaviour
     private float m_Minutes;
     private float m_Seconds;
     
-    public bool levelOver = false;
+    [HideInInspector] public bool levelOver;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
+        levelOver = false;
+
+        StaticBronzeScore = levelScoreBronze;
+        
         m_Minutes = Mathf.RoundToInt(levelTimeLimit / 60);     // sets _minutes variable to rounded integer after dividing remaining time by 6o
         m_Seconds = Mathf.RoundToInt(levelTimeLimit % 60);     // sets _seconds variable to rounded integer after getting the remainder of the division of remaining time by 60
 
@@ -96,13 +101,7 @@ public class GameManager : MonoBehaviour
         int x = players.Length; // index number
         
         TimeKeeper();
-        
-        if (levelTimeLimit <= 0 && (ScoreKeeper.LevelScore + players[0].GetComponent<HealthBar>().healthSlider.value) <= levelScoreBronze && levelOver == false) // only adds first player's remaining HP to score currently
-        {
-            levelOver = true;
-            Lose(levelScoreBronze);
-        }
-        
+
         foreach (var playerHp in playerHps)
         {
             playerHps[x] = players[x].GetComponent<HealthBar>().healthSlider.value;
@@ -194,12 +193,19 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    private void CheckForTimeLimitExpire()
+    public void CheckForTimeLimitExpire()
     {
+        Debug.Log("checking for time expired; levelOver variable = " + levelOver);
+        
         if (levelTimeLimit <= 0f && levelOver == false)
         {
+            Debug.Log("time expired");
+            
+            levelTimeLimit = 0;
+
             if (ScoreKeeper.LevelScore < levelScoreBronze)
             {
+                levelOver = true;
                 Lose(levelScoreBronze);
             }
             if (ScoreKeeper.LevelScore >= levelScoreBronze && ScoreKeeper.LevelScore < levelScoreSliver)

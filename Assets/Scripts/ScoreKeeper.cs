@@ -4,11 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreKeeper : MonoBehaviour
+public class ScoreKeeper : MonoBehaviour // attached to Score_Value child object of HUD
 {
     public static int LevelScore = 0; // starting default score set to 0
     
-    public TMP_Text scoreValue;
+    public TMP_Text scoreValue; // TMP component of Score_value reference set in the inspector
 
     // Start is called before the first frame update
     void Start()
