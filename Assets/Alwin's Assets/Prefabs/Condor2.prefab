@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4110357197717139969}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: GrabPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -448,7 +448,7 @@ GameObject:
   - component: {fileID: 3598089599301590969}
   - component: {fileID: 3090493633403748416}
   - component: {fileID: 7292508962127408627}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Condor2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
