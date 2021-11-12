@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Boids {
@@ -19,8 +20,10 @@ namespace Boids {
 		[HideInInspector] public Vector3 centreOfFlockmates;
 		[HideInInspector] public int numPerceivedFlockmates;
 
-		[HideInInspector] public int pointValue;
+		[SerializeField] private Animator _animator;
+		public int pointValue;
 		[HideInInspector] public Material _material;
+		public float capturedSize = 0.2f;
 
 		[Header("Evade Type Up")] 
 		public Color evadeTypeUpColorA;
@@ -49,6 +52,8 @@ namespace Boids {
 		// Cached
 		Transform _cachedTransform;
 		Transform _target;
+		private static readonly int Stop = Animator.StringToHash("Stop");
+		private static readonly int Move = Animator.StringToHash("Move");
 
 
 		public enum EvasionType {
@@ -74,30 +79,34 @@ namespace Boids {
 			_velocity = transform.forward * startSpeed;
 
 			_evasionType = (EvasionType)Random.Range(0, 4);
-			SetColour();
+			SetColorAndPoints();
 		}
 
-		public void SetColour() {
+		public void SetColorAndPoints() {
 			switch (_evasionType) {
 				case EvasionType.EvadeUp:
 					_material.SetColor("ColorA", evadeTypeUpColorA);
 					_material.SetColor("ColorB", evadeTypeUpColorB);
 					_material.SetColor("BaseColor", evadeTypeUpColorBase);
+					pointValue = evadeTypeUpPointValue;
 					break;
 				case EvasionType.EvadeDown:
 					_material.SetColor("ColorA", evadeTypeDownColorA);
 					_material.SetColor("ColorB", evadeTypeDownColorB);
 					_material.SetColor("BaseColor", evadeTypeDownColorBase);
+					pointValue = evadeTypeDownPointValue;
 					break;
 				case EvasionType.EvadeLeft:
 					_material.SetColor("ColorA", evadeTypeLeftColorA);
 					_material.SetColor("ColorB", evadeTypeLeftColorB);
 					_material.SetColor("BaseColor", evadeTypeLeftColorBase);
+					pointValue = evadeTypeLeftPointValue;
 					break;
 				case EvasionType.EvadeRight:
 					_material.SetColor("ColorA", evadeTypeRightColorA);
 					_material.SetColor("ColorB", evadeTypeRightColorB);
 					_material.SetColor("BaseColor", evadeTypeRightColorBase);
+					pointValue = evadeTypeRightPointValue;
 					break;
 			}
 		}
@@ -142,9 +151,11 @@ namespace Boids {
 				speed = Mathf.Clamp(speed, _settings.minSpeed, _settings.maxSpeed);
 				_velocity = dir * speed;
 
-				_cachedTransform.position += _velocity * Time.deltaTime;
-				_cachedTransform.forward = dir;
-				position = _cachedTransform.position;
+				if (gameObject) {
+					_cachedTransform.position += _velocity * Time.deltaTime;
+					_cachedTransform.forward = dir;
+					position = _cachedTransform.position;
+				}
 				forward = dir;
 			}
 		}
@@ -152,16 +163,12 @@ namespace Boids {
 		private Vector3 EvasionDir() {
 			switch (_evasionType) {
 				case EvasionType.EvadeUp:
-					pointValue = evadeTypeUpPointValue;
 					return Vector3.up;
 				case EvasionType.EvadeDown:
-					pointValue = evadeTypeDownPointValue;
 					return Vector3.down;
 				case EvasionType.EvadeLeft:
-					pointValue = evadeTypeLeftPointValue;
 					return Vector3.left;
 				case EvasionType.EvadeRight:
-					pointValue = evadeTypeRightPointValue;
 					return Vector3.right;
 				default:
 					return Vector3.back;
@@ -170,10 +177,14 @@ namespace Boids {
 
 		public void IsCaptured() {
 			_isCaptured = true;
+			_animator.SetTrigger(Stop);
+			transform.localScale = new Vector3(capturedSize, capturedSize, capturedSize);
 		}
 
 		public void IsReleased() {
 			_isCaptured = false;
+			_animator.SetTrigger(Move);
+			transform.localScale = new Vector3(1f, 1f, 1f);
 		}
 
 		public bool CheckCaptureStatus()
@@ -190,17 +201,6 @@ namespace Boids {
 
 			return false;
 		}
-	
-		//Physics.OverlapSphere()
-
-		// private void OnTriggerEnter(Collider other) {
-		// 	if (other.gameObject.CompareTag("Player")) {
-		// 		Debug.Log("I'm being chased!");
-		// 		Vector3 evadeForce = SteerTowards(Vector3.up) * settings.evadeWeight;
-		// 		acceleration = evadeForce;
-		// 	}
-		// 	
-		// }
 
 		Vector3 ObstacleRays() {
 			Vector3[] rayDirections = BoidHelper.directions;
@@ -218,6 +218,10 @@ namespace Boids {
 		Vector3 SteerTowards(Vector3 vector) {
 			Vector3 v = vector.normalized * _settings.maxSpeed - _velocity;
 			return Vector3.ClampMagnitude(v, _settings.maxSteerForce);
+		}
+
+		private void OnDestroy() {
+			_isCaptured = false;
 		}
 	}
 }

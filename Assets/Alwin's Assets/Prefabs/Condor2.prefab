@@ -444,13 +444,13 @@ GameObject:
   m_Component:
   - component: {fileID: 6748634208718107282}
   - component: {fileID: 6748634208709107058}
-  - component: {fileID: 2286635091693196005}
   - component: {fileID: 3598089599301590969}
   - component: {fileID: 3090493633403748416}
-  - component: {fileID: 7292508962127408627}
+  - component: {fileID: 2286635091693196005}
+  - component: {fileID: 1204222124028117912}
   m_Layer: 8
   m_Name: Condor2
-  m_TagString: Untagged
+  m_TagString: EnemyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -492,43 +492,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2286635091693196005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6748634208718466738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93112034c72af454090f19b529d2d69c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  position: {x: 0, y: 0, z: 0}
-  forward: {x: 0, y: 0, z: 0}
-  isEvading: 0
-  avgFlockHeading: {x: 0, y: 0, z: 0}
-  avgAvoidanceHeading: {x: 0, y: 0, z: 0}
-  centreOfFlockmates: {x: 0, y: 0, z: 0}
-  numPerceivedFlockmates: 0
-  pointValue: 0
-  _material: {fileID: 0}
-  evadeTypeUpColorA: {r: 0.3713955, g: 0.735849, b: 0.40734303, a: 0}
-  evadeTypeUpColorB: {r: 0.31572622, g: 0.5188679, b: 0.3353066, a: 0}
-  evadeTypeUpColorBase: {r: 0.071956225, g: 0.46226418, b: 0.21832906, a: 0}
-  evadeTypeUpPointValue: 200
-  evadeTypeDownColorA: {r: 0.40610537, g: 0.6160343, b: 0.735849, a: 0}
-  evadeTypeDownColorB: {r: 0.24510503, g: 0.35370156, b: 0.6415094, a: 0}
-  evadeTypeDownColorBase: {r: 0.048415814, g: 0.11513204, b: 0.6037736, a: 0}
-  evadeTypeDownPointValue: 400
-  evadeTypeLeftColorA: {r: 0.6037736, g: 0.36534503, b: 0.26486292, a: 0}
-  evadeTypeLeftColorB: {r: 0.5377358, g: 0.063412234, b: 0.063412234, a: 0}
-  evadeTypeLeftColorBase: {r: 0.2735849, g: 0.032262366, b: 0.032262366, a: 0}
-  evadeTypeLeftPointValue: 600
-  evadeTypeRightColorA: {r: 0.6525212, g: 0.6792453, b: 0.2787469, a: 0}
-  evadeTypeRightColorB: {r: 0.6037736, g: 0.56578964, b: 0.12815951, a: 0}
-  evadeTypeRightColorBase: {r: 0.29934448, g: 0.3018868, b: 0.03844785, a: 0}
-  evadeTypeRightPointValue: 700
 --- !u!54 &3598089599301590969
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -578,8 +541,8 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Boid, Assembly-CSharp
+      - m_Target: {fileID: 2286635091693196005}
+        m_TargetAssemblyTypeName: Boids.Boid, Assembly-CSharp
         m_MethodName: IsCaptured
         m_Mode: 1
         m_Arguments:
@@ -593,8 +556,8 @@ MonoBehaviour:
   m_SelectExited:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Boid, Assembly-CSharp
+      - m_Target: {fileID: 2286635091693196005}
+        m_TargetAssemblyTypeName: Boids.Boid, Assembly-CSharp
         m_MethodName: IsReleased
         m_Mode: 1
         m_Arguments:
@@ -639,7 +602,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_AttachTransform: {fileID: 4110357197717139969}
-  m_AttachEaseInTime: 0.15
+  m_AttachEaseInTime: 1.5
   m_MovementType: 0
   m_VelocityDamping: 1
   m_VelocityScale: 1
@@ -675,8 +638,46 @@ MonoBehaviour:
   m_ForceGravityOnDetach: 0
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
---- !u!135 &7292508962127408627
-SphereCollider:
+--- !u!114 &2286635091693196005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6748634208718466738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93112034c72af454090f19b529d2d69c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 0, y: 0, z: 0}
+  forward: {x: 0, y: 0, z: 0}
+  isEvading: 0
+  avgFlockHeading: {x: 0, y: 0, z: 0}
+  avgAvoidanceHeading: {x: 0, y: 0, z: 0}
+  centreOfFlockmates: {x: 0, y: 0, z: 0}
+  numPerceivedFlockmates: 0
+  _animator: {fileID: 6748634208709107058}
+  pointValue: 0
+  _material: {fileID: 0}
+  evadeTypeUpColorA: {r: 0.3713955, g: 0.735849, b: 0.40734303, a: 0}
+  evadeTypeUpColorB: {r: 0.31572622, g: 0.5188679, b: 0.3353066, a: 0}
+  evadeTypeUpColorBase: {r: 0.071956225, g: 0.46226418, b: 0.21832906, a: 0}
+  evadeTypeUpPointValue: 200
+  evadeTypeDownColorA: {r: 0.40610537, g: 0.6160343, b: 0.735849, a: 0}
+  evadeTypeDownColorB: {r: 0.24510503, g: 0.35370156, b: 0.6415094, a: 0}
+  evadeTypeDownColorBase: {r: 0.048415814, g: 0.11513204, b: 0.6037736, a: 0}
+  evadeTypeDownPointValue: 400
+  evadeTypeLeftColorA: {r: 0.6037736, g: 0.36534503, b: 0.26486292, a: 0}
+  evadeTypeLeftColorB: {r: 0.5377358, g: 0.063412234, b: 0.063412234, a: 0}
+  evadeTypeLeftColorBase: {r: 0.2735849, g: 0.032262366, b: 0.032262366, a: 0}
+  evadeTypeLeftPointValue: 600
+  evadeTypeRightColorA: {r: 0.6525212, g: 0.6792453, b: 0.2787469, a: 0}
+  evadeTypeRightColorB: {r: 0.6037736, g: 0.56578964, b: 0.12815951, a: 0}
+  evadeTypeRightColorBase: {r: 0.29934448, g: 0.3018868, b: 0.03844785, a: 0}
+  evadeTypeRightPointValue: 700
+--- !u!65 &1204222124028117912
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -686,8 +687,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 0.8860333, z: 2.225575}
+  m_Center: {x: 0, y: 0.25238287, z: 0.93678856}
 --- !u!1 &6748634208718466740
 GameObject:
   m_ObjectHideFlags: 0
