@@ -1,17 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Scene = UnityEditor.SearchService.Scene;
+using UnityEngine.Windows;
 
 public class ChangeScene : MonoBehaviour
 {
-    [SerializeField] public SceneAsset targetScene;
+    [SerializeField] public String targetSceneName;
     
     public void Change()
     {
-        string sceneName = targetScene.name;
-        SceneManager.LoadScene(sceneName); 
+        SceneManager.LoadScene(targetSceneName); 
     }
 }

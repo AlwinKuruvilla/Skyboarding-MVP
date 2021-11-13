@@ -8,7 +8,7 @@ public class LoadNextLevelScene : MonoBehaviour
 {
     public void LoadNext()
     {
-        string nextLevel = GameManager.NextLevel.name;
+        string nextLevel = GameManager.StaticNextLevel;
         SceneManager.LoadScene(nextLevel);
     }
 }

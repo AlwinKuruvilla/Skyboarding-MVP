@@ -337,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5093443cd4ddd74381eedcc4e820414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: {fileID: 102900000, guid: 09768629d72647c408b59cd5253b3344, type: 3}
+  targetSceneName: Level1
 --- !u!114 &13926303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3776,7 +3776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5093443cd4ddd74381eedcc4e820414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: {fileID: 102900000, guid: 16978df9ab155734f96d8e9bbfe405d7, type: 3}
+  targetSceneName: Instructions
 --- !u!114 &660021678
 MonoBehaviour:
   m_ObjectHideFlags: 0

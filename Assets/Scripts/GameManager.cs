@@ -5,18 +5,18 @@ using System.ComponentModel.Design.Serialization;
 using TMPro;
 using UnityEditor;
 #if UNITY_EDITOR
-using UnityEditor.SearchService;
 #endif
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.UI;
-using Scene = UnityEngine.SceneManagement.Scene;
+using UnityEditor;
+using System;
+
 
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Level Variables")] public float levelTimeLimit = 120f; // set default time time for the level to 2 minutes
-
+    [Header("Level Variables")] public float startingLevelTimeLimit = 120f; // set default time time for the level to 2 minutes
+    public float levelTimeLimit;
+    
     public int levelScoreBronze;
     public static int StaticBronzeScore;
     public int levelScoreSliver;
@@ -38,10 +38,15 @@ public class GameManager : MonoBehaviour
     [NonSerialized] public TMP_Text finalLevelScore;
     [NonSerialized] public TMP_Text minimumLevelScore;
     
+    [Header("Scene References")]
     [Tooltip("reference variables for scene assets")]
-    public static SceneAsset CurrentLevel;
-    public static SceneAsset NextLevel;
-    public static SceneAsset Menu;
+    public String currentLevelName;
+    public String nextLevelName;
+    public String menuName;
+    
+    public static String StaticCurrentLevel;
+    public static String StaticNextLevel;
+    public static String StaticMenu;
     
     [Header("HUD Tier Indicator References")]
     [Tooltip("reference variables for tier indicators in the HUD; set in the Inspector")]
@@ -66,6 +71,15 @@ public class GameManager : MonoBehaviour
     
     [HideInInspector] public bool levelOver;
 
+    private void Awake()
+    {
+        if (Time.timeScale <= 0f)
+        {
+            Time.timeScale = 1f;
+        }
+
+        levelTimeLimit = startingLevelTimeLimit;
+    }
 
 
     // Start is called before the first frame update
@@ -73,8 +87,13 @@ public class GameManager : MonoBehaviour
     {
         levelOver = false;
 
-        StaticBronzeScore = levelScoreBronze;
-        
+        StaticBronzeScore = levelScoreBronze; // sets static variables so the values can be access in static contexts
+        StaticCurrentLevel = currentLevelName;
+        StaticNextLevel = nextLevelName;
+        StaticMenu = menuName;
+
+        ScoreKeeper.LevelScore = 0;
+
         m_Minutes = Mathf.RoundToInt(levelTimeLimit / 60);     // sets _minutes variable to rounded integer after dividing remaining time by 6o
         m_Seconds = Mathf.RoundToInt(levelTimeLimit % 60);     // sets _seconds variable to rounded integer after getting the remainder of the division of remaining time by 60
 
@@ -129,7 +148,12 @@ public class GameManager : MonoBehaviour
         m_Seconds -= Time.deltaTime;   // decreased remaining visual time by 1 second
         timeValue.text = m_Minutes.ToString("00") + ":" + Mathf.RoundToInt(m_Seconds).ToString("00");  // displays the time in minutes and seconds to the timeValue TextMeshPro referenced in the Inspector
         levelTimeLimit -= Time.deltaTime; // decreased time limit value by 1 second
-        if (levelTimeLimit <= 0) levelTimeLimit = 0;
+        if (levelTimeLimit <= 0)
+        {
+            levelTimeLimit = 0;
+            m_Seconds = 0;
+            m_Seconds = 0;
+        }
     }
 
     public void Win(int scoreTier)
@@ -201,7 +225,12 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("time expired");
             
-            levelTimeLimit = 0;
+            if (levelTimeLimit <= 0)
+            {
+                levelTimeLimit = 0;
+                m_Seconds = 0;
+                m_Seconds = 0;
+            }
 
             if (ScoreKeeper.LevelScore < levelScoreBronze)
             {

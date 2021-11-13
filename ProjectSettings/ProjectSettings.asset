@@ -134,14 +134,26 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.1
+  bundleVersion: 0.5
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 4791411858712894888, guid: a9de1a658081eca46866000abaf758d1, type: 2}
-  - {fileID: 5144705889134220506, guid: 63d1114472c3f6241be75f762479ec9a, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: -2945386586691598198, guid: a9de1a658081eca46866000abaf758d1, type: 2}
+  - {fileID: -475805096503623338, guid: 63d1114472c3f6241be75f762479ec9a, type: 2}
   - {fileID: 11400000, guid: 46d98423aa6c8bb419a0cec78624ee26, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -706,7 +718,8 @@ PlayerSettings:
   gcIncremental: 1
   assemblyVersionValidation: 1
   gcWBarrierValidation: 0
-  apiCompatibilityLevelPerPlatform: {}
+  apiCompatibilityLevelPerPlatform:
+    Standalone: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Template3D

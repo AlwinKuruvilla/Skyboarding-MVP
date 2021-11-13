@@ -8,6 +8,10 @@ public class ReloadCurrentScene : MonoBehaviour
 {
     public void ReloadCurrent()
     {
+        if (Time.timeScale <= 0)
+        {
+            Time.timeScale = 1;
+        }
         string currentScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentScene);
     }

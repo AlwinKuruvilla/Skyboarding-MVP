@@ -816,7 +816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5093443cd4ddd74381eedcc4e820414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: {fileID: 102900000, guid: da827930e03839443a2ec402f015ed23, type: 3}
+  targetSceneName: StartMenu
 --- !u!114 &660021678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1527,7 +1527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5093443cd4ddd74381eedcc4e820414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: {fileID: 102900000, guid: 09768629d72647c408b59cd5253b3344, type: 3}
+  targetSceneName: Level1
 --- !u!114 &1206651915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1716,8 +1716,8 @@ MonoBehaviour:
 
     grab constructs and deliver them to the tree in the middle
     of the level to earn points; you must reach the minimum required points before
-    the time runs out to win; you can also lose the the game by running out fo HP
-    by running into obstacles'
+    the time runs out to win; you can also lose the game by running out of HP by
+    running into obstacles'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

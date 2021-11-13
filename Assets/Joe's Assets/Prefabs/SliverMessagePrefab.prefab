@@ -1111,7 +1111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5093443cd4ddd74381eedcc4e820414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: {fileID: 102900000, guid: 75733e0ebe49fad43af34a77b0e66516, type: 3}
+  targetSceneName: StartMenu
 --- !u!1 &7279974460721261913
 GameObject:
   m_ObjectHideFlags: 0
