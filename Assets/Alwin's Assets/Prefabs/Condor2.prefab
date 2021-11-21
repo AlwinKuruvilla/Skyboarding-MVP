@@ -660,21 +660,22 @@ MonoBehaviour:
   _animator: {fileID: 6748634208709107058}
   pointValue: 0
   _material: {fileID: 0}
-  evadeTypeUpColorA: {r: 0.3713955, g: 0.735849, b: 0.40734303, a: 0}
-  evadeTypeUpColorB: {r: 0.31572622, g: 0.5188679, b: 0.3353066, a: 0}
-  evadeTypeUpColorBase: {r: 0.071956225, g: 0.46226418, b: 0.21832906, a: 0}
+  capturedSize: 0.2
+  evadeTypeUpColorA: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 0}
+  evadeTypeUpColorB: {r: 1, g: 1, b: 1, a: 0}
+  evadeTypeUpColorBase: {r: 0, g: 0, b: 0, a: 0}
   evadeTypeUpPointValue: 200
-  evadeTypeDownColorA: {r: 0.40610537, g: 0.6160343, b: 0.735849, a: 0}
-  evadeTypeDownColorB: {r: 0.24510503, g: 0.35370156, b: 0.6415094, a: 0}
-  evadeTypeDownColorBase: {r: 0.048415814, g: 0.11513204, b: 0.6037736, a: 0}
+  evadeTypeDownColorA: {r: 1, g: 1, b: 1, a: 0}
+  evadeTypeDownColorB: {r: 1, g: 1, b: 1, a: 0}
+  evadeTypeDownColorBase: {r: 0, g: 0, b: 0, a: 0}
   evadeTypeDownPointValue: 400
-  evadeTypeLeftColorA: {r: 0.6037736, g: 0.36534503, b: 0.26486292, a: 0}
-  evadeTypeLeftColorB: {r: 0.5377358, g: 0.063412234, b: 0.063412234, a: 0}
-  evadeTypeLeftColorBase: {r: 0.2735849, g: 0.032262366, b: 0.032262366, a: 0}
+  evadeTypeLeftColorA: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0}
+  evadeTypeLeftColorB: {r: 1, g: 1, b: 1, a: 0}
+  evadeTypeLeftColorBase: {r: 0.6415094, g: 0.4266643, b: 0.4266643, a: 0}
   evadeTypeLeftPointValue: 600
-  evadeTypeRightColorA: {r: 0.6525212, g: 0.6792453, b: 0.2787469, a: 0}
-  evadeTypeRightColorB: {r: 0.6037736, g: 0.56578964, b: 0.12815951, a: 0}
-  evadeTypeRightColorBase: {r: 0.29934448, g: 0.3018868, b: 0.03844785, a: 0}
+  evadeTypeRightColorA: {r: 0, g: 0, b: 0, a: 0}
+  evadeTypeRightColorB: {r: 0.4811321, g: 0.43801177, b: 0.43801177, a: 0}
+  evadeTypeRightColorBase: {r: 1, g: 1, b: 1, a: 0}
   evadeTypeRightPointValue: 700
 --- !u!65 &1204222124028117912
 BoxCollider:
