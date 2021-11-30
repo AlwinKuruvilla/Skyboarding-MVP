@@ -146,7 +146,7 @@ Material:
     - _rimGlowNoiseDensity: 1
     - _rimGlowNoiseSpeed: 1
     - _rimPulseSpeed: 3
-    - _scanSize: 0.78
+    - _scanSize: 0.857
     - _scanSpeed: 0.7
     m_Colors:
     - Color_4113B2A7: {r: 0.01401742, g: 0.990566, b: 0.1985787, a: 0}
@@ -169,6 +169,6 @@ Material:
     - _fillTiling: {r: 300, g: 300, b: 0, a: 0}
     - _impactPoint: {r: 0.06, g: 0.1483, b: 0, a: 0}
     - _impactRippleDirection: {r: 1, g: 0, b: 0, a: 0}
-    - _rimColor: {r: 0.209424, g: 7.999999, b: 6.750945, a: 0.95686275}
+    - _rimColor: {r: 9.082411, g: 9.082411, b: 9.082411, a: 0.95686275}
     - _rimPower: {r: 3, g: 3, b: 0, a: 0}
   m_BuildTextureStacks: []
