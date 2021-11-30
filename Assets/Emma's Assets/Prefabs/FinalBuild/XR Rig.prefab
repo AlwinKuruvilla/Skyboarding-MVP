@@ -13950,7 +13950,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 0}
+  healthImage: {fileID: 0}
   maxHealth: 0
+  healthFill: 0
 --- !u!1 &8238238826283317128
 GameObject:
   m_ObjectHideFlags: 0
@@ -15773,7 +15775,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 8239126092923481036}
+  healthImage: {fileID: 0}
   maxHealth: 100
+  healthFill: 0
 --- !u!1 &8239129297914904124
 GameObject:
   m_ObjectHideFlags: 0
