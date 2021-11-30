@@ -17,15 +17,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/StartMenu.unity
     guid: da827930e03839443a2ec402f015ed23
-  - enabled: 1
+  - enabled: 0
     path: Assets/Level1.unity
     guid: 09768629d72647c408b59cd5253b3344
   - enabled: 1
     path: Assets/Instructions.unity
     guid: 16978df9ab155734f96d8e9bbfe405d7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Level1 V2.unity
     guid: 2e998c2f522c7c24e9a9230b6487c609
+  - enabled: 1
+    path: Assets/Level1 V3.unity
+    guid: 126da015d5cc286488408cf62aaaef97
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 46d98423aa6c8bb419a0cec78624ee26, type: 2}
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 974e34af7041fe946acbc8ce445be61d, type: 2}
