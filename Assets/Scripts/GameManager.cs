@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
     private bool m_GoldTierIndicatorOn = false;
     private bool m_AllTierIndicatorsOn = false;
 
+    private Vector3 m_BrozneTierIndicatorScaleUp;
+    private Vector3 m_SilverTierIndicatorScaleUp;
+    private Vector3 m_GoldTierIndicatorScaleUp;
+
     [Header("Time Reference")]
     [Tooltip("reference variable for time")]
     public TMP_Text timeValue;
@@ -96,6 +100,10 @@ public class GameManager : MonoBehaviour
 
         m_Minutes = Mathf.RoundToInt(levelTimeLimit / 60);     // sets _minutes variable to rounded integer after dividing remaining time by 6o
         m_Seconds = Mathf.RoundToInt(levelTimeLimit % 60);     // sets _seconds variable to rounded integer after getting the remainder of the division of remaining time by 60
+
+        m_BrozneTierIndicatorScaleUp = new Vector3(18f, 9.5f, 9.5f);
+        m_SilverTierIndicatorScaleUp = new Vector3(18f, 9.5f, 9.5f);
+        m_GoldTierIndicatorScaleUp = new Vector3(18f, 9.5f, 9.5f);
 
         if (players == null)
         {
@@ -193,21 +201,21 @@ public class GameManager : MonoBehaviour
         if (ScoreKeeper.LevelScore >= levelScoreBronze && m_BrozneTierIndicatorOn == false)
         {
             Debug.Log("Bronze tier achieved");
-            bronzeTierHUDSpriteRef.transform.localScale = Vector3.one;
+            bronzeTierHUDSpriteRef.transform.localScale = m_BrozneTierIndicatorScaleUp;
             m_BrozneTierIndicatorOn = true;
         }
         
         if (ScoreKeeper.LevelScore >= levelScoreSliver && m_SliverTierIndicatorOn == false)
         {
             Debug.Log("Sliver tier achieved");
-            sliverTierHUDSpriteRef.transform.localScale = Vector3.one;
+            sliverTierHUDSpriteRef.transform.localScale = m_SilverTierIndicatorScaleUp;
             m_SliverTierIndicatorOn = true;
         }
         
         if (ScoreKeeper.LevelScore >= levelScoreSliver && m_GoldTierIndicatorOn == false)
         {
             Debug.Log("Gold tier achieved");
-            goldTierHUDSpriteRef.transform.localScale = Vector3.one;
+            goldTierHUDSpriteRef.transform.localScale = m_GoldTierIndicatorScaleUp;
             m_GoldTierIndicatorOn = true;
         }
 
