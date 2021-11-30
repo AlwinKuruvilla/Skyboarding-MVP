@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 45d092724d7ce9c42b596cdb15534c6a
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Oswald
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 80797b285a9dc5b4eb03e24576214403, type: 3}
+  - {fileID: 12800000, guid: 258ad462f73358f4db9d414ab057a83c, type: 3}
+  - {fileID: 12800000, guid: 41ec553782482914f851897e85422445, type: 3}
+  - {fileID: 12800000, guid: 117365156d361834c9132e6ce297d7f6, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
