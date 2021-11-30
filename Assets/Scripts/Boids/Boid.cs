@@ -182,9 +182,13 @@ namespace Boids {
 		}
 
 		public void IsReleased() {
-			_isCaptured = false;
 			_animator.SetTrigger(Move);
 			transform.localScale = new Vector3(1f, 1f, 1f);
+			BoidsFollowPosition.SetPosition(gameObject);
+		}
+
+		public void IsSetFree() {
+			_isCaptured = false;
 		}
 
 		public bool CheckCaptureStatus()
